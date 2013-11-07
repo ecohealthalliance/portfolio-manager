@@ -1,0 +1,9 @@
+<template name="result">
+    {{#if isResultSelected}}
+        {{#with selectedResult}}
+            <div>{{content}}</div>
+        {{/with}}
+    {{else}}
+        <h4>Select a result</h4>
+    {{/if}}
+</template>

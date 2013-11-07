@@ -1,0 +1,11 @@
+<template name="resultListItem">
+    <div class="result-list-item{{selectedClass}}" promed-id="{{promedId}}">
+        <div class="result-content">
+            {{#if tags}}
+                {{title}}
+            {{else}}
+                <strong>{{title}}</strong>
+            {{/if}}
+        </div>
+    </div>
+</template>

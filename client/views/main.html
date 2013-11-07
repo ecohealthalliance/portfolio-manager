@@ -1,0 +1,29 @@
+<head>
+  <title>Portfolio Manager</title>
+</head>
+
+<body>
+  <div class="container">
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="/">Portfolio Manager</a>
+      </div>
+    </header>
+    <div class="container-fluid">
+      <div class="wrapper span3">
+        <div id="results-list">
+          {{> resultsList}}
+        </div>
+      </div>
+      <div class="wrapper span5">
+        <div id="selected-result" class="well">
+          {{> result}}
+        </div>
+      </div>
+      <div class="wrapper span3">
+        <div id="selected-result-tags">
+          {{> tagList}}
+        </div>
+      </div>
+  </div>
+</body>
