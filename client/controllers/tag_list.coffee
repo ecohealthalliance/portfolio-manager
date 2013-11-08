@@ -67,6 +67,12 @@ addTag = (tag) ->
         @portfolioManager.Results.update({'_id': result._id}, {'$push': {'tags': tag}})
         @portfolioManager.Tags.update({_id: tagId}, {'$set': {lastUsedDate: new Date()}, '$inc': {count: 1}})
 
+removeTag = (tag) ->
+    promedId = Session.get('selectedResult')
+    result = @portfolioManager.Results.findOne({promedId: promedId})
+    @portfolioManager.Results.update({'_id': result._id}, {'$pull': {'tags': tag}})
+    tagId = @portfolioManager.Tags.findOne({tag: tag})._id
+    @portfolioManager.Tags.update({_id: tagId}, {'$inc': {'count': -1}})
 
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
@@ -76,6 +82,10 @@ Template.tagList.events(
     'click .suggested-tag' : (event) ->
         tag = $(event.currentTarget).text()
         addTag(tag)
+
+    'click .remove-tag': (event) ->
+        tag = $(event.currentTarget).parents('.tag').attr('tag')
+        removeTag(tag)
 )
 
 Template.tagList.rendered = () ->

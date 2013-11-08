@@ -7,7 +7,7 @@
         </div>
         <div>
             {{#each tags}}
-                <span class="tag label" style="background-color:{{color}}">{{this}}</span>
+                <span class="tag label" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
             {{/each}}
         </div>
         <div class="suggested-tags">
