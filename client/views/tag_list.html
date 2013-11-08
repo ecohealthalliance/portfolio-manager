@@ -10,5 +10,40 @@
                 <span class="tag label" style="background-color:{{color}}">{{this}}</span>
             {{/each}}
         </div>
+        <div class="suggested-tags">
+            <h4>Suggested Tags</h4>
+            {{#if suggestedFromLinkedReports}}
+                <h5>From linked reports</h5>
+                <div>
+                    {{#each suggestedFromLinkedReports}}
+                        <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+            {{#if suggestedFromRecent}}
+                <h5>Recently used</h5>
+                <div>
+                    {{#each suggestedFromRecent}}
+                        <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+            {{#if suggestedFromPopular}}
+                <h5>Popular</h5>
+                <div>
+                    {{#each suggestedFromPopular}}
+                        <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+            {{#if suggestedFromWords}}
+                <h5>From words in report</h5>
+                <div>
+                    {{#each suggestedFromWords}}
+                        <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+            </div>
     {{/if}}
 </template>
