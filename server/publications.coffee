@@ -18,7 +18,7 @@ Results.allow(
 )
 
 Meteor.publish('results', () ->
-    Results.find({}, {sort: {promedId: 1}, limit: 50})
+    Results.find({}, {sort: {promedId: 1}})
 )
 
 Meteor.publish('tags', () ->
