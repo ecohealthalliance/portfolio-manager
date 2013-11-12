@@ -11,39 +11,49 @@
             {{/each}}
         </div>
         <div class="suggested-tags">
+            {{#with suggestedTags}}
             <h4>Suggested Tags</h4>
-            {{#if suggestedFromLinkedReports}}
+            {{#if top}}
+                <div>
+                    {{#each top}}
+                        <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{/if}}
+            <br><br>
+            {{#if linked}}
                 <h5>From linked reports</h5>
                 <div>
-                    {{#each suggestedFromLinkedReports}}
+                    {{#each linked}}
                         <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
                     {{/each}}
                 </div>
             {{/if}}
-            {{#if suggestedFromRecent}}
+            {{#if recent}}
                 <h5>Recently used</h5>
                 <div>
-                    {{#each suggestedFromRecent}}
+                    {{#each recent}}
                         <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
                     {{/each}}
                 </div>
             {{/if}}
-            {{#if suggestedFromPopular}}
+            {{#if popular}}
                 <h5>Popular</h5>
                 <div>
-                    {{#each suggestedFromPopular}}
+                    {{#each popular}}
                         <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
                     {{/each}}
                 </div>
             {{/if}}
-            {{#if suggestedFromWords}}
+            {{#if words}}
                 <h5>From words in report</h5>
                 <div>
-                    {{#each suggestedFromWords}}
+                    {{#each words}}
                         <span class="tag label suggested-tag" style="background-color:{{color}}">{{this}}</span>
                     {{/each}}
                 </div>
             {{/if}}
-            </div>
+            {{/with}}
+        </div>
     {{/if}}
 </template>

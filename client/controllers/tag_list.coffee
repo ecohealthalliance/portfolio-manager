@@ -21,40 +21,55 @@ Template.tagList.helpers(
     color: () ->
         COLORS(this)
 
-    suggestedFromLinkedReports: () ->
-        tags = []
+    suggestedTags: () ->
         selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
+
+        linkedTags = []
         linkedReports = selectedResult?.linkedReports or []
         for resultId in linkedReports
             result = @portfolioManager.Results.findOne({promedId: resultId})
             if result?.tags
-                tags = tags.concat(result.tags)
-        _.unique(_.difference(tags, selectedResult?.tags))
+                linkedTags = linkedTags.concat(result.tags)
+        linkedTags = _.unique(_.difference(linkedTags, selectedResult?.tags))
 
-    suggestedFromRecent: () ->
-        selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
-        tags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
-        _.unique(_.difference(tags, selectedResult?.tags))
+        recentTags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
+        recentTags = _.unique(_.difference(recentTags, selectedResult?.tags))
 
-    suggestedFromPopular: () ->
-        selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
-        tags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {count: -1}, limit: 10}).fetch())
-        _.unique(_.difference(tags, selectedResult?.tags))
+        popularTags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {count: -1}, limit: 10}).fetch())
+        popularTags = _.unique(_.difference(popularTags, selectedResult?.tags))
 
-    suggestedFromWords: () ->
-        selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
         words = selectedResult?.content?.split(/\s/)
         words = _.filter(words, (word) ->
             word.length > 5
         )
         words = _.map(words, (word) -> word.toLowerCase())
         wordCounts = _.countBy(words, (word) -> word)
-        tags = _.sortBy(_.keys(wordCounts), (word) ->
+        wordTags = _.sortBy(_.keys(wordCounts), (word) ->
             -wordCounts[word]
         )
-        _.unique(_.difference(tags, selectedResult?.tags))[0...10]
+        wordTags = _.unique(_.difference(wordTags, selectedResult?.tags))[0...10]
 
-    
+        allSuggestions = _.union(linkedTags, recentTags, popularTags, wordTags)
+        topSuggestions = _.sortBy(allSuggestions, (tag) ->
+            score = 0
+            if _.include(linkedTags, tag)
+                score += 30 - _.indexOf(linkedTags, tag)
+            if _.include(recentTags, tag)
+                score += 15 - _.indexOf(recentTags, tag)
+            if _.include(popularTags, tag)
+                score += 10 - _.indexOf(popularTags, tag)
+            if _.include(wordTags, tag)
+                score += 20 - _.indexOf(wordTags, tag)
+            -score
+        )
+
+        {
+            top: topSuggestions[0...15]
+            linked: linkedTags
+            recent: recentTags
+            popular: popularTags
+            words: wordTags
+        }    
 )
 
 addTag = (tag) ->
