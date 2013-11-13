@@ -39,10 +39,11 @@ Template.tagList.helpers(
         popularTags = _.unique(_.difference(popularTags, selectedResult?.tags))
 
         words = selectedResult?.content?.split(/\s/)
+
+        words = _.map(words, (word) -> word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
         words = _.filter(words, (word) ->
-            word.length > 5
+            word.length > 4
         )
-        words = _.map(words, (word) -> word.toLowerCase())
         wordCounts = _.countBy(words, (word) -> word)
         wordTags = _.sortBy(_.keys(wordCounts), (word) ->
             -wordCounts[word]
