@@ -1,8 +1,12 @@
 <template name="result">
     {{#if isResultSelected}}
-        {{#with selectedResult}}
-            <div>{{content}}</div>
-        {{/with}}
+        {{#each selectedResultWords}}
+            {{#if isTag}}
+                <span class="tag label" style="background-color:{{color}}">{{word}}</span>
+            {{else}}
+                {{word}}
+            {{/if}}
+        {{/each}}
     {{else}}
         <h4>Select a result</h4>
     {{/if}}

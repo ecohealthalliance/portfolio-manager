@@ -7,8 +7,6 @@ Meteor.subscribe('tags', () ->
     )
 )
 
-COLORS = d3.scale.category20()
-
 Template.tagList.helpers(
     isResultSelected: () ->
         Session.get('selectedResult')
@@ -19,7 +17,7 @@ Template.tagList.helpers(
         result?.tags
 
     color: () ->
-        COLORS(this)
+        window.portfolioManager.tagColor(this)
 
     suggestedTags: () ->
         selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
