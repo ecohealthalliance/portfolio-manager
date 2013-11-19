@@ -32,5 +32,6 @@ Meteor.publish('popularTags', () ->
 Meteor.publish('reportTags', (reportText) ->
     words = (word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"") for word in reportText.split(' '))
     bigrams = (words[i] + ' ' + words[i+1] for i in [0..words.length])
-    Tags.find({name: {'$in': words.concat(bigrams)}})
+    trigrams = (words[i] + ' ' + words[i+1] + ' ' + words[i + 2] for i in [0..words.length - 1])
+    Tags.find({name: {'$in': words.concat(bigrams).concat(trigrams)}})
 )
