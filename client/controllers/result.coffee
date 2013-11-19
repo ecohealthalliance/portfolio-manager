@@ -7,7 +7,15 @@ Template.result.helpers(
         result = @portfolioManager.Results.findOne({promedId: promedId})
         Meteor.subscribe('reportTags', result?.content or '')
         words = result?.content.split(' ') or []
-        ({word: word, category: @portfolioManager.suggestedTagService.tagCategory(word)} for word in words)
+        groupedWords = []
+        i = 0
+        while (i += 1) < words.length
+        	if @portfolioManager.suggestedTagService.tagCategory(words[i] + ' ' + words[i + 1])
+        		groupedWords.push(words[i] + ' ' + words[i + 1])
+        		i += 1
+        	else
+        		groupedWords.push(words[i])
+        ({word: word, category: @portfolioManager.suggestedTagService.tagCategory(word)} for word in groupedWords)
 
     color: () ->
     	window.portfolioManager.tagColor(@word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
