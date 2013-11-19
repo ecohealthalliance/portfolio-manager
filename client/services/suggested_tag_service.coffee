@@ -12,11 +12,11 @@
         _.unique(_.difference(linkedTags, selectedResult?.tags))
 
     getRecentTags: (selectedResult) =>
-        recentTags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
+        recentTags = (tag.name for tag in @portfolioManager.Tags.find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
         _.unique(_.difference(recentTags, selectedResult?.tags))
 
     getPopularTags: (selectedResult) =>
-        popularTags = (tag.tag for tag in @portfolioManager.Tags.find({}, {sort: {count: -1}, limit: 10}).fetch())
+        popularTags = (tag.name for tag in @portfolioManager.Tags.find({}, {sort: {count: -1}, limit: 10}).fetch())
         _.unique(_.difference(popularTags, selectedResult?.tags))
 
     getWordTags: (selectedResult) =>
@@ -33,11 +33,6 @@
         _.unique(_.difference(wordTags, selectedResult?.tags))[0...10]
 
     tagCategory : (word) =>
-        tag = word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"")
-        if @portfolioManager.Symptoms.findOne({name: tag})
-            return 'symptom'
-        if @portfolioManager.Diseases.findOne({name: tag})
-            return 'disease'
-        if @portfolioManager.Tags.findOne({tag: tag})
-            return 'other'
-        null
+        normalizedWord = word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"")
+        tag = @portfolioManager.Tags.findOne({name: normalizedWord})
+        tag?.category

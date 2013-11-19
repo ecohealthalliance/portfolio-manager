@@ -1,14 +1,14 @@
 getTags = () =>
-    (tag.tag for tag in @portfolioManager.Tags.find().fetch())
+    (tag.name for tag in @portfolioManager.Tags.find().fetch())
 
-Meteor.subscribe('tags', () ->
+Meteor.subscribe('recentTags', () ->
     $('#add-tag-text').typeahead(
         source: getTags
     )
 )
 
-Meteor.subscribe('symptoms')
-Meteor.subscribe('diseases')
+Meteor.subscribe('popularTags')
+
 
 Template.tagList.helpers(
     isResultSelected: () ->
@@ -54,9 +54,9 @@ Template.tagList.helpers(
 )
 
 addTag = (tag) ->
-    if not @portfolioManager.Tags.findOne({tag: tag})
-        @portfolioManager.Tags.insert({tag: tag})
-    tagId = @portfolioManager.Tags.findOne({tag: tag})._id
+    if not @portfolioManager.Tags.findOne({name: tag})
+        @portfolioManager.Tags.insert({name: tag, category: 'user-added'})
+    tagId = @portfolioManager.Tags.findOne({name: tag})._id
     promedId = Session.get('selectedResult')
     result = @portfolioManager.Results.findOne({promedId: promedId})
     if not _.include(result.tags, tag)
@@ -67,7 +67,7 @@ removeTag = (tag) ->
     promedId = Session.get('selectedResult')
     result = @portfolioManager.Results.findOne({promedId: promedId})
     @portfolioManager.Results.update({'_id': result._id}, {'$pull': {'tags': tag}})
-    tagId = @portfolioManager.Tags.findOne({tag: tag})._id
+    tagId = @portfolioManager.Tags.findOne({name: tag})._id
     @portfolioManager.Tags.update({_id: tagId}, {'$inc': {'count': -1}})
 
 Template.tagList.events(

@@ -1,7 +1,5 @@
 Results = @portfolioManager.Results
 Tags = @portfolioManager.Tags
-Symptoms = @portfolioManager.Symptoms
-Diseases = @portfolioManager.Diseases
 
 Tags.allow(
     insert: (userId, document) ->
@@ -23,14 +21,15 @@ Meteor.publish('results', () ->
     Results.find({}, {sort: {promedId: 1}})
 )
 
-Meteor.publish('tags', () ->
-    Tags.find()
+Meteor.publish('recentTags', () ->
+    Tags.find({}, {sort: {lastUsedDate: -1}, limit: 10})
 )
 
-Meteor.publish('symptoms', () ->
-  Symptoms.find()
+Meteor.publish('popularTags', () ->
+    Tags.find({}, {sort: {count: 1}, limit: 10})
 )
 
-Meteor.publish('diseases', () ->
-  Diseases.find()
+Meteor.publish('reportTags', (reportText) ->
+    words = (word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"") for word in reportText.split(' '))
+    Tags.find({name: {'$in': words}})
 )
