@@ -1,5 +1,6 @@
 import pymongo
 import contextlib
+import re
 from urllib import urlopen
 
 db = pymongo.Connection('localhost', 3002)['meteor']
@@ -22,6 +23,14 @@ with contextlib.closing(urlopen(DO_URL)) as raw_obo:
 				name = line.split(': ')[1]
 			elif line.startswith('synonym: '):
 				synonyms.append(line.split('"')[1])
+			elif line.startswith('def: '):
+				symptoms = [re.compile('[\w\s]*').match(text).group(0) for text in line.split('has_symptom ')[1:]]
+				for symptom in symptoms:
+					tags.insert({
+						'name': symptom,
+						'category': 'symptom',
+						'source': 'disease ontology',
+					})
 		if category:
 			for synonym in synonyms + [name]:
 				tags.insert({
