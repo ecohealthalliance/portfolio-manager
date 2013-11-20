@@ -13,7 +13,7 @@ with contextlib.closing(urlopen(CKAN_URL)) as raw_csv:
 		if line:
 			name, definition, synonyms = line.split(',')
 			diseases.insert({
-                'name': name,
+                'name': name.lower(),
                 'definition': definition,
-                'synonyms': [synonym for synonym in synonyms.split('  ') if synonym],
+                'synonyms': [synonym.lower() for synonym in synonyms.split('  ') if synonym],
 			})

@@ -1,8 +1,8 @@
 <template name="result">
     {{#if isResultSelected}}
         {{#each selectedResultWords}}
-            {{#if isTag}}
-                <div class="tag-container"><div class="tag-category"><span class="label">category</span></div><span class="tag label" style="background-color:{{color}}">{{word}}</span></div>
+            {{#if category}}
+                <div class="tag-container"><div class="tag-category"><span class="label">{{category}}</span></div><span class="tag label" style="background-color:{{color}}">{{word}}</span></div>
             {{else}}
                 {{word}}
             {{/if}}

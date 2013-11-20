@@ -13,7 +13,7 @@ with contextlib.closing(urlopen(CKAN_URL)) as raw_csv:
 		if line:
 			name, definition, source = line.split(',')
 			symptoms.insert({
-				'name': name,
+				'name': name.lower(),
 				'definition': definition,
 				'source': source,
 			})

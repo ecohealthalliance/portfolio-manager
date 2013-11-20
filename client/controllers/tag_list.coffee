@@ -7,6 +7,9 @@ Meteor.subscribe('tags', () ->
     )
 )
 
+Meteor.subscribe('symptoms')
+Meteor.subscribe('diseases')
+
 Template.tagList.helpers(
     isResultSelected: () ->
         Session.get('selectedResult')

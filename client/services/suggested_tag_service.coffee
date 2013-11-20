@@ -31,3 +31,13 @@
             -wordCounts[word]
         )
         _.unique(_.difference(wordTags, selectedResult?.tags))[0...10]
+
+    tagCategory : (word) =>
+        tag = word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"")
+        if @portfolioManager.Symptoms.findOne({name: tag})
+            return 'symptom'
+        if @portfolioManager.Diseases.findOne({name: tag})
+            return 'disease'
+        if @portfolioManager.Tags.findOne({tag: tag})
+            return 'other'
+        null

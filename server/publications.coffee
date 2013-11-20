@@ -1,5 +1,7 @@
 Results = @portfolioManager.Results
 Tags = @portfolioManager.Tags
+Symptoms = @portfolioManager.Symptoms
+Diseases = @portfolioManager.Diseases
 
 Tags.allow(
     insert: (userId, document) ->
@@ -23,4 +25,12 @@ Meteor.publish('results', () ->
 
 Meteor.publish('tags', () ->
     Tags.find()
+)
+
+Meteor.publish('symptoms', () ->
+  Symptoms.find()
+)
+
+Meteor.publish('diseases', () ->
+  Diseases.find()
 )
