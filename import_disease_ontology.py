@@ -10,13 +10,29 @@ tags = db.tags
 DO_URL = 'https://svn.code.sf.net/p/diseaseontology/code/trunk/DO_logical_def.obo'
 
 with contextlib.closing(urlopen(DO_URL)) as raw_obo:
-	for term in raw_obo.read().split('\n[Typedef]')[0].split('\n[Term]\n')[1:]:
+	text = raw_obo.read()
+	is_a_doid_regex = re.compile('is_a: DOID:(\d+)')
+	disease_category_ids = set()
+	for line in text.split('\n'):
+		if line.startswith('is_a: DOID'):
+			try:
+				doid = is_a_doid_regex.match(line).group(1)
+				disease_category_ids.add(doid)
+			except:
+				print 'error: %s' % line
+
+	doid_regex = re.compile('id: DOID:(\d+)')
+	for term in text.split('\n[Typedef]')[0].split('\n[Term]\n')[1:]:
 		category = None
 		name = ''
 		synonyms = []
 		for line in term.split('\n'):
 			if line.startswith('id: DOID:'):
-				category = 'disease'
+				doid = doid_regex.match(line).group(1)
+				if doid in disease_category_ids:
+					category = 'disease category'
+				else:
+					category = 'disease'
 			elif line.startswith('id: SYMP:'):
 				category = 'symptom'
 			elif line.startswith('name:'):
