@@ -42,15 +42,17 @@ with contextlib.closing(urlopen(DO_URL)) as raw_obo:
 			elif line.startswith('def: '):
 				symptoms = [re.compile('[\w\s]*').match(text).group(0) for text in line.split('has_symptom ')[1:]]
 				for symptom in symptoms:
-					tags.insert({
-						'name': symptom,
-						'category': 'symptom',
-						'source': 'disease ontology',
-					})
+					if not tags.find_one({'name': symptom}):
+						tags.insert({
+							'name': symptom,
+							'category': 'symptom',
+							'source': 'disease ontology',
+						})
 		if category:
 			for synonym in synonyms + [name]:
-				tags.insert({
-					'name': synonym.lower(),
-					'category': category,
-					'source': 'disease ontology',
-				})
+				if not tags.find_one({'name': synonym}):
+					tags.insert({
+						'name': synonym.lower(),
+						'category': category,
+						'source': 'disease ontology',
+					})

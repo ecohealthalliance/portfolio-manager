@@ -12,7 +12,8 @@ with contextlib.closing(urlopen(CKAN_URL)) as raw_csv:
 	for line in raw_csv.read().split('\n')[1:]:
 		if line:
 			name, definition, source = line.split(',')
-			tags.insert({
-				'name': name.lower(),
-				'category': 'symptom',
-			})
+			if not tags.find_one({'name': name.lower()}):
+				tags.insert({
+					'name': name.lower(),
+					'category': 'symptom',
+				})
