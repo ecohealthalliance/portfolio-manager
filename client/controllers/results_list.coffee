@@ -1,12 +1,16 @@
 Meteor.subscribe('results')
 
+getResults = (query, options) =>
+    Results = @portfolioManager.collections.Results
+    Results.find(query, options)
+
 Template.resultsList.helpers(
     results: () ->
         query = Session.get('query')
         if query
-            @portfolioManager.Results.find({'tags': query})
+            getResults({'tags': query})
         else
-            @portfolioManager.Results.find({}, {limit: 50})
+            getResults({}, {limit: 50})
 )
 
 Template.resultsList.events(

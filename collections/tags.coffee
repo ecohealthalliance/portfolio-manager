@@ -1,2 +1,3 @@
 @portfolioManager ?= {}
-@portfolioManager.Tags = new Meteor.Collection('tags')
+@portfolioManager.collections ?= {}
+@portfolioManager.collections.Tags = new Meteor.Collection('tags')

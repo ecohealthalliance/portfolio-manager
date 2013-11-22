@@ -1,9 +1,25 @@
-getTags = () =>
-    (tag.name for tag in @portfolioManager.Tags.find().fetch())
+results = () =>
+    @portfolioManager.collections.Results
+
+getResult = (promedId) =>
+    results().findOne({promedId: promedId})
+
+getTagColor = (tag) =>
+    @portfolioManager.services.tagColor(tag)
+
+tags = () =>
+    @portfolioManager.collections.Tags
+
+getAllTags = () =>
+    (tag.name for tag in tags().find().fetch())
+
+suggestedTagService = () =>
+    @portfolioManager.services.suggestedTagService
+
 
 Meteor.subscribe('recentTags', () ->
     $('#add-tag-text').typeahead(
-        source: getTags
+        source: getAllTags
     )
 )
 
@@ -16,19 +32,19 @@ Template.tagList.helpers(
     
     tags: () ->
         promedId = Session.get('selectedResult')
-        result = @portfolioManager.Results.findOne({'promedId': promedId})
+        result = getResult(promedId)
         result?.tags
 
     color: () ->
-        window.portfolioManager.tagColor(this)
+        getTagColor(this)
 
     suggestedTags: () ->
-        selectedResult = @portfolioManager.Results.findOne({'promedId': Session.get('selectedResult')})
+        selectedResult = getResult(Session.get('selectedResult'))
 
-        linkedTags = @portfolioManager.suggestedTagService.getLinkedTags(selectedResult)
-        recentTags = @portfolioManager.suggestedTagService.getRecentTags(selectedResult)
-        popularTags = @portfolioManager.suggestedTagService.getPopularTags(selectedResult)
-        wordTags = @portfolioManager.suggestedTagService.getWordTags(selectedResult)
+        linkedTags = suggestedTagService().getLinkedTags(selectedResult)
+        recentTags = suggestedTagService().getRecentTags(selectedResult)
+        popularTags = suggestedTagService().getPopularTags(selectedResult)
+        wordTags = suggestedTagService().getWordTags(selectedResult)
 
         allSuggestions = _.union(linkedTags, recentTags, popularTags, wordTags)
         topSuggestions = _.sortBy(allSuggestions, (tag) ->
@@ -54,21 +70,21 @@ Template.tagList.helpers(
 )
 
 addTag = (tag) ->
-    if not @portfolioManager.Tags.findOne({name: tag})
-        @portfolioManager.Tags.insert({name: tag, category: 'user-added'})
-    tagId = @portfolioManager.Tags.findOne({name: tag})._id
+    if not tags().findOne({name: tag})
+        tags().insert({name: tag, category: 'user-added'})
+    tagId = tags().findOne({name: tag})._id
     promedId = Session.get('selectedResult')
-    result = @portfolioManager.Results.findOne({promedId: promedId})
+    result = getResult(promedId)
     if not _.include(result.tags, tag)
-        @portfolioManager.Results.update({'_id': result._id}, {'$push': {'tags': tag}})
-        @portfolioManager.Tags.update({_id: tagId}, {'$set': {lastUsedDate: new Date()}, '$inc': {count: 1}})
+        results().update({'_id': result._id}, {'$push': {'tags': tag}})
+        tags().update({_id: tagId}, {'$set': {lastUsedDate: new Date()}, '$inc': {count: 1}})
 
 removeTag = (tag) ->
     promedId = Session.get('selectedResult')
-    result = @portfolioManager.Results.findOne({promedId: promedId})
-    @portfolioManager.Results.update({'_id': result._id}, {'$pull': {'tags': tag}})
-    tagId = @portfolioManager.Tags.findOne({name: tag})._id
-    @portfolioManager.Tags.update({_id: tagId}, {'$inc': {'count': -1}})
+    result = getResult(promedId)
+    results().update({'_id': result._id}, {'$pull': {'tags': tag}})
+    tagId = tags().findOne({name: tag})._id
+    tags().update({_id: tagId}, {'$inc': {'count': -1}})
 
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
@@ -86,5 +102,5 @@ Template.tagList.events(
 
 Template.tagList.rendered = () ->
     $('#add-tag-text').typeahead(
-        source: getTags
+        source: getAllTags
     )

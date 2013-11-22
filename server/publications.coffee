@@ -1,5 +1,5 @@
-Results = @portfolioManager.Results
-Tags = @portfolioManager.Tags
+Results = @portfolioManager.collections.Results
+Tags = @portfolioManager.collections.Tags
 
 Tags.allow(
     insert: (userId, document) ->

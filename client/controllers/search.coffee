@@ -1,5 +1,6 @@
 getTags = () =>
-    (tag.name for tag in @portfolioManager.Tags.find().fetch())
+    Tags = @portfolioManager.collections.Tags
+    (tag.name for tag in Tags.find().fetch())
 
 Template.search.helpers(
     query: () ->

@@ -1,2 +1,3 @@
 @portfolioManager ?= {}
-@portfolioManager.Results = new Meteor.Collection('results')
+@portfolioManager.collections ?= {}
+@portfolioManager.collections.Results = new Meteor.Collection('results')
