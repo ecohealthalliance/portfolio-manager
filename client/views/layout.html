@@ -1,0 +1,17 @@
+<head>
+  <title>Portfolio Manager</title>
+</head>
+
+<template name="layout">
+  <div class="container">
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="/">Portfolio Manager</a>
+        {{> search}}
+      </div>
+    </header>
+    <div class="container-fluid">
+        {{yield}}
+    </div>
+  </div>
+</template>
