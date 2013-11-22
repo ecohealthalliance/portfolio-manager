@@ -1,6 +1,6 @@
-<template name="result">
-    {{#if isResultSelected}}
-        {{#each selectedResultWords}}
+<template name="resource">
+    {{#if isResourceSelected}}
+        {{#each selectedResourceWords}}
             {{#if category}}
                 <div class="tag-container"><div class="tag-category"><span class="label">{{category}}</span></div><span class="tag label" style="background-color:{{color}}">{{word}}</span></div>
             {{else}}
@@ -8,6 +8,6 @@
             {{/if}}
         {{/each}}
     {{else}}
-        <h4>Select a result</h4>
+        <h4>Select a resource</h4>
     {{/if}}
 </template>

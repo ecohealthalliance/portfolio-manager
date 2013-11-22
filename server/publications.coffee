@@ -1,4 +1,4 @@
-Results = @portfolioManager.collections.Results
+Resources = @portfolioManager.collections.Resources
 Tags = @portfolioManager.collections.Tags
 
 Tags.allow(
@@ -11,14 +11,14 @@ Tags.allow(
       true
 )
 
-Results.allow(
+Resources.allow(
     update: (userId, document, fields, changes) ->
       console.log "#{new Date()}: user #{userId} updated #{document._id} with #{JSON.stringify(changes)}"
       true
 )
 
-Meteor.publish('results', () ->
-    Results.find({}, {sort: {promedId: 1}})
+Meteor.publish('resources', () ->
+    Resources.find({}, {sort: {promedId: 1}})
 )
 
 Meteor.publish('recentTags', () ->

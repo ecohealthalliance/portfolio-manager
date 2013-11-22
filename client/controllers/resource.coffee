@@ -1,6 +1,6 @@
-getResult = (promedId) =>
-    Results = @portfolioManager.collections.Results
-    Results.findOne({promedId: promedId})
+getResource = (promedId) =>
+    Resources = @portfolioManager.collections.Resources
+    Resources.findOne({promedId: promedId})
 
 getTagColor = (tag) =>
     @portfolioManager.services.tagColor(tag)
@@ -9,15 +9,15 @@ getTagCategory = (tag) =>
     suggestedTagService = @portfolioManager.services.suggestedTagService
     suggestedTagService.tagCategory(tag)
 
-Template.result.helpers(
-    isResultSelected: () ->
-        Session.get('selectedResult')
+Template.resource.helpers(
+    isResourceSelected: () ->
+        Session.get('selectedResource')
 
-    selectedResultWords: () ->
-        promedId = Session.get('selectedResult')
-        result = getResult(promedId)
-        Meteor.subscribe('reportTags', result?.content or '')
-        words = result?.content.split(' ') or []
+    selectedResourceWords: () ->
+        promedId = Session.get('selectedResource')
+        resource = getResource(promedId)
+        Meteor.subscribe('reportTags', resource?.content or '')
+        words = resource?.content.split(' ') or []
         groupedWords = []
         i = 0
         while (i += 1) < words.length

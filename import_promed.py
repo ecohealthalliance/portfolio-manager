@@ -4,7 +4,7 @@ from glob import glob
 
 db = pymongo.Connection('localhost', 3002)['meteor']
 
-results = db.results
+resources = db.resources
 
 REPORT_PATH = '/Users/aslagle/src/grits_scripts/data/promed'
 files = glob('%s/*.txt' % REPORT_PATH)
@@ -24,7 +24,7 @@ for file in files:
 
         report_ids = [report_id.split('.')[1] for report_id in report_id_regex.findall(report)]
 
-        results.insert({
+        resources.insert({
             'promedId': promed_id,
             'title': label,
             'content': report,

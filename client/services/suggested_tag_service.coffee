@@ -4,33 +4,33 @@
 tags = () =>
     @portfolioManager.collections.Tags
 
-results = () =>
-    @portfolioManager.collections.Results
+resources = () =>
+    @portfolioManager.collections.Resources
 
 getTagCategory = (tag) =>
     tags().findOne({name: tag})?.category
 
 @portfolioManager.services.suggestedTagService =
 
-    getLinkedTags: (selectedResult) =>
+    getLinkedTags: (selectedResource) =>
         linkedTags = []
-        linkedReports = selectedResult?.linkedReports or []
-        for resultId in linkedReports
-            result = results().findOne({promedId: resultId})
-            if result?.tags
-                linkedTags = linkedTags.concat(result.tags)
-        _.unique(_.difference(linkedTags, selectedResult?.tags))
+        linkedReports = selectedResource?.linkedReports or []
+        for reportId in linkedReports
+            resource = resources().findOne({promedId: reportId})
+            if resource?.tags
+                linkedTags = linkedTags.concat(resource.tags)
+        _.unique(_.difference(linkedTags, selectedResource?.tags))
 
-    getRecentTags: (selectedResult) =>
+    getRecentTags: (selectedResource) =>
         recentTags = (tag.name for tag in tags().find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
-        _.unique(_.difference(recentTags, selectedResult?.tags))
+        _.unique(_.difference(recentTags, selectedResource?.tags))
 
-    getPopularTags: (selectedResult) =>
+    getPopularTags: (selectedResource) =>
         popularTags = (tag.name for tag in tags().find({}, {sort: {count: -1}, limit: 10}).fetch())
-        _.unique(_.difference(popularTags, selectedResult?.tags))
+        _.unique(_.difference(popularTags, selectedResource?.tags))
 
-    getWordTags: (selectedResult) =>
-        words = selectedResult?.content?.split(/\s/)
+    getWordTags: (selectedResource) =>
+        words = selectedResource?.content?.split(/\s/)
 
         words = _.map(words, (word) -> word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
         words = _.filter(words, (word) ->
@@ -40,7 +40,7 @@ getTagCategory = (tag) =>
         wordTags = _.sortBy(_.keys(wordCounts), (word) ->
             -wordCounts[word]
         )
-        _.unique(_.difference(wordTags, selectedResult?.tags))[0...10]
+        _.unique(_.difference(wordTags, selectedResource?.tags))[0...10]
 
     tagCategory : (word) =>
         normalizedWord = word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"")

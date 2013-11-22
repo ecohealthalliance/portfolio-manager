@@ -1,8 +1,8 @@
-results = () =>
-    @portfolioManager.collections.Results
+resources = () =>
+    @portfolioManager.collections.Resources
 
-getResult = (promedId) =>
-    results().findOne({promedId: promedId})
+getResource = (promedId) =>
+    resources().findOne({promedId: promedId})
 
 getTagColor = (tag) =>
     @portfolioManager.services.tagColor(tag)
@@ -27,24 +27,24 @@ Meteor.subscribe('popularTags')
 
 
 Template.tagList.helpers(
-    isResultSelected: () ->
-        Session.get('selectedResult')
+    isResourceSelected: () ->
+        Session.get('selectedResource')
     
     tags: () ->
-        promedId = Session.get('selectedResult')
-        result = getResult(promedId)
-        result?.tags
+        promedId = Session.get('selectedResource')
+        resource = getResource(promedId)
+        resource?.tags
 
     color: () ->
         getTagColor(this)
 
     suggestedTags: () ->
-        selectedResult = getResult(Session.get('selectedResult'))
+        selectedResource = getResource(Session.get('selectedResource'))
 
-        linkedTags = suggestedTagService().getLinkedTags(selectedResult)
-        recentTags = suggestedTagService().getRecentTags(selectedResult)
-        popularTags = suggestedTagService().getPopularTags(selectedResult)
-        wordTags = suggestedTagService().getWordTags(selectedResult)
+        linkedTags = suggestedTagService().getLinkedTags(selectedResource)
+        recentTags = suggestedTagService().getRecentTags(selectedResource)
+        popularTags = suggestedTagService().getPopularTags(selectedResource)
+        wordTags = suggestedTagService().getWordTags(selectedResource)
 
         allSuggestions = _.union(linkedTags, recentTags, popularTags, wordTags)
         topSuggestions = _.sortBy(allSuggestions, (tag) ->
@@ -73,16 +73,16 @@ addTag = (tag) ->
     if not tags().findOne({name: tag})
         tags().insert({name: tag, category: 'user-added'})
     tagId = tags().findOne({name: tag})._id
-    promedId = Session.get('selectedResult')
-    result = getResult(promedId)
-    if not _.include(result.tags, tag)
-        results().update({'_id': result._id}, {'$push': {'tags': tag}})
+    promedId = Session.get('selectedResource')
+    resource = getResource(promedId)
+    if not _.include(resource.tags, tag)
+        resources().update({'_id': resource._id}, {'$push': {'tags': tag}})
         tags().update({_id: tagId}, {'$set': {lastUsedDate: new Date()}, '$inc': {count: 1}})
 
 removeTag = (tag) ->
-    promedId = Session.get('selectedResult')
-    result = getResult(promedId)
-    results().update({'_id': result._id}, {'$pull': {'tags': tag}})
+    promedId = Session.get('selectedResource')
+    resource = getResource(promedId)
+    resources().update({'_id': resource._id}, {'$pull': {'tags': tag}})
     tagId = tags().findOne({name: tag})._id
     tags().update({_id: tagId}, {'$inc': {'count': -1}})
 
