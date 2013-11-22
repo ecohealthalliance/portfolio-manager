@@ -5,6 +5,11 @@ Router.configure(
 Router.map () ->
     @route('home', {
         path: '/'
+        template: 'home'
+    })
+
+    @route('list', {
+        path: '/list'
         template: 'list'
         after: () ->
             setSize = () ->
