@@ -8,6 +8,11 @@ Router.map () ->
         template: 'home'
     })
 
+    @route('build', {
+        path: '/build'
+        template: 'build'
+    })
+
     @route('list', {
         path: '/list'
         template: 'list'
