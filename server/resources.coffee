@@ -71,7 +71,7 @@ Meteor.methods(
                     Resources.upsert({promedId: promedId}, {
                         promedId: promedId
                         title: label
-                        content: post
+                        content: content
                         linkedReports: linkedReports
                         zoomLat: zoomLat
                         zoomLon: zoomLon

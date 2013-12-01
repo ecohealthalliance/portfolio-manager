@@ -4,13 +4,27 @@ getResources = (query, options) =>
     Resources = @portfolioManager.collections.Resources
     Resources.find(query, options)
 
+getPortfolio = (portfolioId) =>
+    Portfolios = @portfolioManager.collections.Portfolios
+    Portfolios.findOne({_id: portfolioId})
+
 Template.resourcesList.helpers(
+    portfolioName: () ->
+        getPortfolio(Session.get('selectedPortfolio')).name
+
     resources: () ->
         query = Session.get('query')
         if query
             getResources({'tags': query})
         else
-            getResources({}, {limit: 50})
+            portfolioId = Session.get('selectedPortfolio')
+            if portfolioId
+                portfolio = getPortfolio(portfolioId)
+                resourceIds = portfolio.resources
+                query = {promedId: {'$in': resourceIds}}
+                getResources(query)
+            else
+                getResources({}, {limit: 50})
 )
 
 Template.resourcesList.events(

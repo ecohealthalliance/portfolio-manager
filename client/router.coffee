@@ -6,6 +6,9 @@ Router.map () ->
     @route('portfolios', {
         path: '/'
         template: 'portfolios'
+        before: () ->
+            Session.set('selectedResource', null)
+            Session.set('selectedPortfolio', null)
     })
 
     @route('build', {
@@ -14,8 +17,11 @@ Router.map () ->
     })
 
     @route('list', {
-        path: '/list'
+        path: '/list/:_id'
         template: 'list'
+        before: () ->
+            Session.set('selectedResource', null)
+            Session.set('selectedPortfolio', @params._id)
         after: () ->
             setSize = () ->
                 navbarHeight = $('.navbar').height()
