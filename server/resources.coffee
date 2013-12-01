@@ -42,6 +42,41 @@ Meteor.methods(
                 })
                 console.log "ProMED report #{id} imported"
             catch error
-                console.log "Error importing #{id}: #{error}"
+                console.log "Error importing #{id}: #{error}, trying alternate"
+                url = "http://www.promedmail.org/pm.server.php"
+                searchParams = {
+                    xajax: 'advanced_search'
+                    xajaxr: new Date().getTime()
+                    'xajaxargs[]': "<xjxquery><q>archiveid=#{id}&submit=search</q></xjxquery>"
+                }
+                try
+                    searchResponse = HTTP.post(url, {params: searchParams})
+                    searchId = /id(phph\d+)\"/.exec(searchResponse.content)[1]
+                    previewParams = {
+                        xajax: 'preview'
+                        xajaxr: new Date().getTime()
+                        'xajaxargs[]': searchId
+                    }
+                    previewResponse = HTTP.post(url, {params: previewParams})
+                    content = previewResponse.content
+                    zoomLat = /LatLng\((\d+\.\d+),/.exec(content)[1]
+                    zoomLon = /LatLng\(\d+\.\d+,\s(\d+\.\d+)\)/.exec(content)[1]
+                    zoomLevel = /setZoom\((\d+)\)/.exec(content)[1]
+                    content = content.replace(/<.*?>/g, '')
+                    label = />.*?Archive Number/.exec(post)[0][2...-15]
+                    linkedReports = (reportId.split('.')[1] for  reportId in content.match(/\d{8}\.\d+/g))
+                    promedId = id.split('.')[1]
+                    Resources.upsert({promedId: promedId}, {
+                        promedId: promedId
+                        title: label
+                        content: post
+                        linkedReports: linkedReports
+                        zoomLat: zoomLat
+                        zoomLon: zoomLon
+                        zoomLevel: zoomLevel
+                    })
+                    console.log "ProMED report #{id} imported"
+                catch error2
+                    console.log "Error importing from alternate url: #{error2}"
 
 )
