@@ -1,0 +1,11 @@
+<template name="portfolios">
+  <div id="portfolios-list">
+    {{#each portfolios}}
+      {{> portfolio}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="portfolio">
+  <a class="btn btn-large btn-info portfolio"><div>{{name}}</div></a>
+</template>

@@ -3,9 +3,9 @@ Router.configure(
 )
 
 Router.map () ->
-    @route('home', {
+    @route('portfolios', {
         path: '/'
-        template: 'home'
+        template: 'portfolios'
     })
 
     @route('build', {
