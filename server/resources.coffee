@@ -1,5 +1,5 @@
 Resources = @portfolioManager.collections.Resources
-
+Portfolios = @portfolioManager.collections.Portfolios
 
 Resources.allow(
     update: (userId, document, fields, changes) ->
@@ -13,6 +13,7 @@ Meteor.publish('resources', () ->
 
 Meteor.methods(
     'import' : (ids) ->
+        importedIds = []
         for id in ids
             url = "http://www.promedmail.org/getPost.php?alert_id=#{id}"
             try
@@ -41,6 +42,7 @@ Meteor.methods(
                     zoomLevel: zoomLevel
                 })
                 console.log "ProMED report #{id} imported"
+                importedIds.push(promedId)
             catch error
                 console.log "Error importing #{id}: #{error}, trying alternate"
                 url = "http://www.promedmail.org/pm.server.php"
@@ -59,11 +61,11 @@ Meteor.methods(
                     }
                     previewResponse = HTTP.post(url, {params: previewParams})
                     content = previewResponse.content
-                    zoomLat = /LatLng\((\d+\.\d+),/.exec(content)[1]
-                    zoomLon = /LatLng\(\d+\.\d+,\s(\d+\.\d+)\)/.exec(content)[1]
-                    zoomLevel = /setZoom\((\d+)\)/.exec(content)[1]
+                    zoomLat = /LatLng\((\d+\.\d+),/.exec(content)?[1]
+                    zoomLon = /LatLng\(\d+\.\d+,\s(\d+\.\d+)\)/.exec(content)?[1]
+                    zoomLevel = /setZoom\((\d+)\)/.exec(content)?[1]
                     content = content.replace(/<.*?>/g, '')
-                    label = />.*?Archive Number/.exec(post)[0][2...-15]
+                    label = /Subject\:.*?Archive Number/.exec(content)[0][9...-15]
                     linkedReports = (reportId.split('.')[1] for  reportId in content.match(/\d{8}\.\d+/g))
                     promedId = id.split('.')[1]
                     Resources.upsert({promedId: promedId}, {
@@ -76,7 +78,11 @@ Meteor.methods(
                         zoomLevel: zoomLevel
                     })
                     console.log "ProMED report #{id} imported"
+                    importedIds.push(promedId)
                 catch error2
                     console.log "Error importing from alternate url: #{error2}"
-
+        Portfolios.insert({
+            name: new Date().getTime()
+            resources: importedIds
+        })
 )
