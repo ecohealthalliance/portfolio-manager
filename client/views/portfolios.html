@@ -8,5 +8,8 @@
 </template>
 
 <template name="portfolio">
-  <a class="btn btn-large btn-info portfolio" href="{{pathFor 'list'}}"><div>{{name}}</div></a>
+  <a class="btn btn-large btn-info portfolio" href="{{pathFor 'list'}}">
+    <div class="portfolio-name">{{name}}</div>
+    <div class="portfolio-report-count">{{resources.length}} reports</div>
+  </a>
 </template>
