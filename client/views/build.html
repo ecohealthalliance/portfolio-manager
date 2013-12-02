@@ -1,9 +1,18 @@
 <template name="build">
-    Enter portfolio name:
-    <textarea id="import-name"></textarea>
-    <br />
+    <div id="import-form">
+        Enter portfolio name:
+        <textarea id="import-name"></textarea>
+        <br />
 
-	Enter promed ids to import:
-	<textarea id="import-promed-ids"></textarea>
-	<button id="import-promed-button" class="btn btn-primary">Import</button>
+        Enter promed ids to import:
+        <textarea id="import-promed-ids"></textarea>
+        <button id="import-promed-button" class="btn btn-primary">Import</button>
+    </div>
+    <div id="import-progress" style="display: none">
+        Importing <span id="import-progress-name"></span>
+    </div>
+    <div id="import-done" style="display: none">
+        <a id="import-done-link" class="btn btn-large btn-info">View portfolio <span id="import-done-name"></span></a>
+        <a id="new-import" class="btn btn-large btn-primary">Import another</a>
+    </div>
 </template>
