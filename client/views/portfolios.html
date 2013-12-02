@@ -10,6 +10,6 @@
 <template name="portfolio">
   <a class="btn btn-large btn-info portfolio" href="{{pathFor 'list'}}">
     <div class="portfolio-name">{{name}}</div>
-    <div class="portfolio-report-count">{{resources.length}} reports</div>
+    <div class="portfolio-report-count">{{resources.length}} {{reportCountUnit}}</div>
   </a>
 </template>
