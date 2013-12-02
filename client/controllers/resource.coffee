@@ -9,6 +9,10 @@ getTagCategory = (tag) =>
     suggestedTagService = @portfolioManager.services.suggestedTagService
     suggestedTagService.tagCategory(tag)
 
+addTag = (tag) ->
+    @portfolioManager.services.tagService.addTag(tag)
+
+
 Template.resource.helpers(
     isResourceSelected: () ->
         Session.get('selectedResource')
@@ -33,4 +37,10 @@ Template.resource.helpers(
 
     color: () ->
         getTagColor(@word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
+)
+
+Template.resource.events(
+    'click .tag-container': (event) ->
+        tag = $(event.currentTarget).children('.tag').html()
+        addTag(tag)
 )
