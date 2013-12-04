@@ -10,6 +10,9 @@ resources = () =>
 getTagCategory = (tag) =>
     tags().findOne({name: tag})?.category
 
+normalize = (tag) ->
+    @portfolioManager.services.normalize(tag)
+
 @portfolioManager.services.suggestedTagService =
 
     getLinkedTags: (selectedResource) =>
@@ -32,7 +35,7 @@ getTagCategory = (tag) =>
     getWordTags: (selectedResource) =>
         words = selectedResource?.content?.split(/\s/)
 
-        words = _.map(words, (word) -> word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
+        words = _.map(words, (word) -> normalize(word))
         words = _.filter(words, (word) ->
             word.length > 4
         )
@@ -43,5 +46,5 @@ getTagCategory = (tag) =>
         _.unique(_.difference(wordTags, selectedResource?.tags))[0...10]
 
     tagCategory : (word) =>
-        normalizedWord = word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,"")
-        getTagCategory(normalizedWord)
+        getTagCategory(normalize(word))
+

@@ -12,6 +12,9 @@ getTagCategory = (tag) =>
 addTag = (tag) ->
     @portfolioManager.services.tagService.addTag(tag)
 
+normalize = (tag) ->
+    @portfolioManager.services.normalize(tag)
+
 
 Template.resource.helpers(
     isResourceSelected: () ->
@@ -36,11 +39,11 @@ Template.resource.helpers(
         ({word: word, category: getTagCategory(word)} for word in groupedWords)
 
     color: () ->
-        getTagColor(@word.toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=`~()]/g,""))
+        getTagColor(normalize(@word))
 )
 
 Template.resource.events(
     'click .tag-container': (event) ->
         tag = $(event.currentTarget).children('.tag').html()
-        addTag(tag)
+        addTag(normalize(tag))
 )

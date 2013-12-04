@@ -3,6 +3,6 @@ getPortfolio = (portfolioId) =>
     Portfolios.findOne({_id: portfolioId})
 
 Template.portfolioInfo.helpers(
-    portfolioName: () ->
-        getPortfolio(Session.get('selectedPortfolio')).name
+    portfolio: () ->
+        getPortfolio(Session.get('selectedPortfolio'))
 )
