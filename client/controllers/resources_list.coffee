@@ -9,9 +9,6 @@ getPortfolio = (portfolioId) =>
     Portfolios.findOne({_id: portfolioId})
 
 Template.resourcesList.helpers(
-    portfolioName: () ->
-        getPortfolio(Session.get('selectedPortfolio')).name
-
     resources: () ->
         query = Session.get('query')
         if query
