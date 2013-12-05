@@ -1,32 +1,109 @@
 import pymongo
+from bson.objectid import ObjectId
 import re
-from glob import glob
+import contextlib
+import json
+import time
+from urllib import urlopen, unquote, urlencode
 
-db = pymongo.Connection('localhost', 3002)['meteor']
-
-resources = db.resources
-
-REPORT_PATH = '/Users/aslagle/src/grits_scripts/data/promed'
-files = glob('%s/*.txt' % REPORT_PATH)
 report_id_regex = re.compile('\d{8}\.\d+')
 label_regex = re.compile('>.*?Archive Number')
+search_id_regex = re.compile('id(p?h?p?h?\d+)')
+zoom_lat_regex = re.compile('LatLng\((\d+\.\d+),')
+zoom_lon_regex = re.compile('LatLng\(\d+\.\d+,\s(\-?\d+\.\d+)\)')
+zoom_level_regex = re.compile('setZoom\((\d+)\)')
+long_label_regex = re.compile('Subject\:.*?Archive Number')
+html_markup_regex = re.compile('<.*?>', flags=re.MULTILINE)
 
-for file in files:
-    promed_id = file.split('/')[-1].split('.')[0]
-    with open(file) as f:
-        report = f.read()
+def import_promed(db, id):
+    url = "http://www.promedmail.org/getPost.php?alert_id=%s" % id
+    with contextlib.closing(urlopen(url)) as raw_response:
+        try:
+            text = raw_response.read()
+            response = json.loads(raw_response.read())
+            content = json.loads(response.content)
+            zoomLat = content.zoom_lat
+            zoomLon = content.zoom_lon
+            zoomLevel = content.zoom_level
+            post = content.post
 
-        match = label_regex.search(report)
-        if match:
-            label = match.group(0)[1:-14].strip()
-        else:
-            label = promed_id
+            try:
+                post = unquote(post)
+            except Exception as e:
+                print "Error decoding %s: %s" % (id, e)
 
-        report_ids = [report_id.split('.')[1] for report_id in report_id_regex.findall(report)]
+            match = label_regex.search(report)
+            if match:
+                label = match.group(0)[1:-14].strip()
+            else:
+                label = id
 
-        resources.insert({
-            'promedId': promed_id,
-            'title': label,
-            'content': report,
-            'linkedReports': report_ids,
-        })
+            linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(report)]
+            promed_id = id.split('.')[1]
+
+            resources.update({'promedId': promed_id}, {
+                'promedId': promed_id,
+                'title': label,
+                'content': post,
+                'linkedReports': linked_reports,
+                'zoomLat': zoomLat,
+                'zoomLon': zoomLon,
+                'zoomLevel': zoomLevel,
+            }, upsert=True)
+        except Exception as import_error:
+            print "Error importing %s, trying alternate: %s" % (id, import_error)
+            url = "http://www.promedmail.org/pm.server.php"
+            searchParams = {
+                'xajax': 'advanced_search',
+                'xajaxr': int(time.time()),
+                'xajaxargs[]': "<xjxquery><q>archiveid=%s&submit=search</q></xjxquery>" % id,
+            }
+            with contextlib.closing(urlopen(url, urlencode(searchParams))) as search_response:
+                searchResponseText = search_response.read()
+                searchIdMatch = search_id_regex.search(searchResponseText)
+                if not searchIdMatch:
+                    print searchResponseText
+                searchId = searchIdMatch.group(1)
+                previewParams = {
+                    'xajax': 'preview',
+                    'xajaxr': int(time.time()),
+                    'xajaxargs[]': searchId
+                }
+                with contextlib.closing(urlopen(url, urlencode(previewParams))) as preview_response:
+                    content = preview_response.read()
+                    zoomLat, zoomLon, zoomLevel = None, None, None
+                    zoomLatMatch = zoom_lat_regex.search(content)
+                    if zoomLatMatch:
+                        zoomLat = zoomLatMatch.group(1)
+                    zoomLonMatch = zoom_lon_regex.search(content)
+                    if zoomLonMatch:
+                        zoomLon = zoomLonMatch.group(1)
+                    zoomLevelMatch = zoom_level_regex.search(content)
+                    if zoomLevelMatch:
+                        zoomLevel = zoomLevelMatch.group(1)
+                    content = re.sub(html_markup_regex, '', content)
+                    label = long_label_regex.search(content).group(0)[9:-15]
+                    linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(content)]
+                    promed_id = id.split('.')[1]
+
+                    db.resources.update({'promedId': promed_id}, {
+                        '_id': str(ObjectId()),
+                        'promedId': promed_id,
+                        'title': label,
+                        'content': content,
+                        'linkedReports': linked_reports,
+                        'zoomLat': zoomLat,
+                        'zoomLon': zoomLon,
+                        'zoomLevel': zoomLevel,
+                    }, upsert=True)
+
+
+
+
+
+
+
+
+
+
+                
