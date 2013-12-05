@@ -1,17 +1,8 @@
-import pymongo
 import contextlib
-import argparse
 import re
 from urllib import urlopen
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-port', help="mongodb port", default=27017)
-    parser.add_argument('-db', help="mongodb db", default="meteor")
-    args = parser.parse_args()
-
-    db = pymongo.Connection('localhost', int(args.port))[args.db]
-
+def import_disease_ontology(db):
     tags = db.tags
 
     DO_URL = 'https://svn.code.sf.net/p/diseaseontology/code/trunk/DO_logical_def.obo'

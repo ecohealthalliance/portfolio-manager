@@ -1,16 +1,7 @@
-import pymongo
 import contextlib
-import argparse
 from urllib import urlopen
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-port', help="mongodb port", default=27017)
-    parser.add_argument('-db', help="mongodb db", default="meteor")
-    args = parser.parse_args()
-
-    db = pymongo.Connection('localhost', int(args.port))[args.db]
-
+def import_diseases(db):
     tags = db.tags
 
     CKAN_URL = "https://ckan-datastore.s3.amazonaws.com/2013-11-12T18:22:32.991Z/google-define-disease-definitions.csv"
@@ -26,3 +17,5 @@ if __name__ == '__main__':
                                 'name': synonym.lower(),
                                 'category': 'disease',
                             })
+
+
