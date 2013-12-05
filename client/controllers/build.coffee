@@ -1,3 +1,12 @@
+createPortfolio = (name) ->
+    Portfolios = @portfolioManager.collections.Portfolios
+    Portfolios.insert({
+        'name': name
+        'createDate': new Date().getTime()
+        'resources': []
+    })
+
+
 Template.build.events(
     'click #import-promed-button' : (event) ->
         $('#import-form').hide()
@@ -7,9 +16,10 @@ Template.build.events(
         $('#import-done-name').text(portfolioName)
         $('#import-progress').show()
         promedIds = (id.replace(' ', '') for id in text.split(','))
-        Meteor.call('import', promedIds, portfolioName, (error, result) ->
+        portfolioId = createPortfolio(portfolioName)
+        Meteor.call('import', promedIds, portfolioId, (error, result) ->
             console.log(error.reason) if error
-            path = Router.routes['list'].path({'_id': result})
+            path = Router.routes['list'].path({'_id': portfolioId})
             $('#import-done-link').attr('href', path)
             $('#import-progress').hide()
             $('#import-done').show()

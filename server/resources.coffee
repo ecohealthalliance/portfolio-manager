@@ -12,9 +12,9 @@ Meteor.publish('resources', () ->
 )
 
 Meteor.methods(
-    'import' : (ids, portfolioName) ->
+    'import' : (promedIds, portfolioId) ->
         importedIds = []
-        for id in ids
+        for id in promedIds
             url = "http://www.promedmail.org/getPost.php?alert_id=#{id}"
             try
                 response = HTTP.get(url)
@@ -81,9 +81,7 @@ Meteor.methods(
                     importedIds.push(promedId)
                 catch error2
                     console.log "Error importing from alternate url: #{error2}"
-        Portfolios.insert({
-            name: portfolioName
-            createDate: new Date().getTime()
-            resources: importedIds
+        Portfolios.update({'_id': portfolioId}, {
+            '$push': {resources: {'$each': importedIds}}
         })
 )
