@@ -3,9 +3,14 @@ Router.configure(
 )
 
 Router.map () ->
-    @route('portfolios', {
+    @route('home', {
         path: '/'
-        template: 'portfolios'
+        after: () ->
+            Router.go('portfolios')
+    })
+
+    @route('portfolios', {
+        path: '/portfolios'
         before: () ->
             Session.set('selectedResource', null)
             Session.set('selectedPortfolio', null)
@@ -13,12 +18,10 @@ Router.map () ->
 
     @route('build', {
         path: '/build'
-        template: 'build'
     })
 
     @route('list', {
         path: '/list/:_id'
-        template: 'list'
         before: () ->
             Session.set('selectedResource', null)
             Session.set('selectedPortfolio', @params._id)
