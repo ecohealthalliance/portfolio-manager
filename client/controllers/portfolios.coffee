@@ -4,6 +4,14 @@ getPortfolios = () =>
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.find()
 
+Router.map () ->
+	@route('portfolios', {
+		path: '/portfolios'
+		before: () ->
+			Session.set('selectedResource', null)
+			Session.set('selectedPortfolio', null)
+	})
+
 Template.portfolios.helpers(
     portfolios: () ->
         getPortfolios()

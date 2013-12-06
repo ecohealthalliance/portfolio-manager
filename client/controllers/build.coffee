@@ -6,6 +6,11 @@ createPortfolio = (name) ->
         'resources': []
     })
 
+Router.map () ->
+    @route('build', {
+        path: '/build'
+    })
+
 
 Template.build.events(
     'click #import-promed-button' : (event) ->
