@@ -43,10 +43,16 @@ if __name__ == '__main__':
             except Exception as e:
                 print "Error importing %s: %s" % (resource, e)
 
+        name = name.replace('"', '').replace(')', '')
+        disease, details = name.split('(')
+        location, year = details.split(',')
 
         portfolioId = portfolios.insert({
             '_id': str(ObjectId()),
-            'name': name.replace('"', ''),
+            'name': name,
+            'disease': disease.strip(),
+            'location': location.strip(),
+            'year': year.strip(),
             'createDate': datetime.now(),
             'resources': imported_resources,
         })
