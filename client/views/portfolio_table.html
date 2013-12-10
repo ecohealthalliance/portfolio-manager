@@ -1,25 +1,5 @@
 <template name="portfolioTable">
-    {{simpleTable portfolios}}
-    <table class="table table-striped table-hover" id="portfolio-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Disease</th>
-                <th>Location</th>
-                <th>Year</th>
-                <th class="resources-cell">Resources</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each portfolios}}
-                <tr portfolio={{_id}}>
-                    <td>{{name}}</td>
-                    <td>{{disease}}</td>
-                    <td>{{location}}</td>
-                    <td>{{year}}</td>
-                    <td class="resources-cell">{{resources.length}}</td>
-                </tr>
-            {{/each}}
-        </tbody>
-    </table>
+    <div id="portfolio-table">
+        {{simpleTable portfolios fields attrs}}
+    </div>
 </template>

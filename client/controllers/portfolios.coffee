@@ -38,6 +38,22 @@ Template.portfolioIcon.helpers(
 Template.portfolioTable.helpers(
     portfolios: () ->
         getPortfolios()
+
+    fields: () ->
+        [
+            { key: 'name', label: 'Name' }
+            { key: 'disease', label: 'Disease' }
+            { key: 'location', label: 'Location' }
+            { key: 'year', label: 'Year' }
+            { 
+                key: 'resources'
+                label: 'Resources'
+                fn: (value) -> value.length
+            }
+        ]
+
+    attrs: () ->
+        portfolio: '_id'
 )
 
 Template.portfolioTable.events(

@@ -3,15 +3,15 @@
         <thead>
             <tr>
             {{#each fields}}
-                <th>{{this}}</th>
+                <th class="{{key}}">{{label}}</th>
             {{/each}}
             </tr>
         </thead>
         <tbody>
         {{#each collection}}
-            <tr>
+            <tr {{getAttrs ../attrs}}>
             {{#each ../fields}}
-                <td>{{getField this ../this}}</td>
+                <td class="{{key}}">{{getField ../this}}</td>
             {{/each}}
             </tr>
         {{/each}}
