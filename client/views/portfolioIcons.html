@@ -1,13 +1,13 @@
-<template name="portfolios">
+<template name="portfolioIcons">
   <div id="portfolios-list">
     {{#each portfolios}}
-      {{> portfolio}}
+      {{> portfolioIcon}}
     {{/each}}
     {{> buildButton}}
   </div>
 </template>
 
-<template name="portfolio">
+<template name="portfolioIcon">
   <a class="btn btn-large btn-info portfolio" href="{{pathFor 'list'}}">
     <div class="portfolio-name">{{name}}</div>
     <div class="portfolio-report-count">{{resources.length}} {{reportCountUnit}}</div>

@@ -5,19 +5,19 @@ getPortfolios = () =>
     Portfolios.find()
 
 Router.map () ->
-	@route('portfolios', {
-		path: '/portfolios'
+	@route('portfolioIcons', {
+		path: '/portfolios/icons'
 		before: () ->
 			Session.set('selectedResource', null)
 			Session.set('selectedPortfolio', null)
 	})
 
-Template.portfolios.helpers(
+Template.portfolioIcons.helpers(
     portfolios: () ->
         getPortfolios()
 )
 
-Template.portfolio.helpers(
+Template.portfolioIcon.helpers(
     reportCountUnit: () ->
     	if @resources.length is 1 then 'report' else 'reports'
 )
