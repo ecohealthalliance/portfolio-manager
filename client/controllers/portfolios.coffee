@@ -56,7 +56,7 @@ Template.portfolioTable.helpers(
 )
 
 Template.portfolioTable.events(
-    'click #portfolio-table tr': (event) ->
+    'click #portfolio-table tbody tr': (event) ->
         portfolioId = $(event.currentTarget).attr('portfolio')
         Router.go('list', {_id: portfolioId})
 )
