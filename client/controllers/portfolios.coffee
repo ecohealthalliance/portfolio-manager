@@ -1,8 +1,7 @@
 Meteor.subscribe('portfolios')
 
 getPortfolios = () =>
-    Portfolios = @portfolioManager.collections.Portfolios
-    Portfolios.find()
+    @portfolioManager.collections.Portfolios
 
 clearSelections = () ->
     Session.set('selectedResource', null)
@@ -27,7 +26,7 @@ Router.map () ->
 
 Template.portfolioIcons.helpers(
     portfolios: () ->
-        getPortfolios()
+        getPortfolios().find()
 )
 
 Template.portfolioIcon.helpers(

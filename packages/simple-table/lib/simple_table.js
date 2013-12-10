@@ -3,9 +3,10 @@ if (Handlebars) {
         if (_.keys(fields).length < 1 ||
             (_.keys(fields).length === 1 &&
                 _.keys(fields)[0] === 'hash')) {
-            fields = _.without(_.keys(collection.fetch()[0]), '_id');
+            fields = _.without(_.keys(collection.findOne()), '_id');
         }
-        var html = Template.simpleTable({collection: collection, fields: fields, attrs: attrs});
+        var rows = collection.find();
+        var html = Template.simpleTable({rows: rows, fields: fields, attrs: attrs});
         return new Handlebars.SafeString(html);
     });
 }
@@ -23,3 +24,4 @@ Template.simpleTable.helpers({
         return attrStrings.join(' ');
     }
 });
+
