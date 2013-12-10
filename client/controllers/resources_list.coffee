@@ -8,9 +8,14 @@ getPortfolio = (portfolioId) =>
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.findOne({_id: portfolioId})
 
+yieldTemplates =
+    'portfolio-icons-nav': {to: 'icons-nav'}
+    'portfolio-table-nav': {to: 'table-nav'}
+
 Router.map () ->
    @route('list', {
         path: '/list/:_id'
+        yieldTemplates: yieldTemplates
         before: () ->
             Session.set('selectedResource', null)
             Session.set('selectedPortfolio', @params._id)
