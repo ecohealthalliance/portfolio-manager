@@ -16,6 +16,11 @@ getAllTags = () =>
 suggestedTagService = () =>
     @portfolioManager.services.suggestedTagService
 
+getTagCategory = (tag) =>
+    suggestedTagService().tagCategory(tag)
+
+normalize = (tag) ->
+    @portfolioManager.services.normalize(tag)
 
 Meteor.subscribe('recentTags', () ->
     $('#add-tag-text').typeahead(
@@ -34,6 +39,25 @@ Template.tagList.helpers(
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
         resource?.tags
+
+    symptomTags: () ->
+        promedId = Session.get('selectedResource')
+        resource = getResource(promedId)
+        Meteor.subscribe('reportTags', resource?.content or '')
+        words = resource?.content.split(' ') or []
+        groupedWords = []
+        i = 0
+        while (i += 1) < words.length
+            if getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]) is 'symptom'
+                groupedWords.push(normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]))
+                i += 2
+            else if getTagCategory(words[i] + ' ' + words[i + 1]) is 'symptom'
+                groupedWords.push(normalize(words[i] + ' ' + words[i + 1]))
+                i += 1
+            else if getTagCategory(words[i]) is 'symptom'
+                groupedWords.push(normalize(words[i]))
+        _.unique(groupedWords)
+
 
     color: () ->
         getTagColor(this)
