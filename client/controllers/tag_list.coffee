@@ -113,6 +113,10 @@ Template.tagList.events(
         tag = $(event.currentTarget).text()
         addTag(tag)
 
+    'click .auto-tag' : (event) ->
+        tag = $(event.currentTarget).find('.tag-text').text()
+        addTag(tag)
+
     'click .remove-tag': (event) ->
         tag = $(event.currentTarget).parents('.tag').attr('tag')
         removeTag(tag)
