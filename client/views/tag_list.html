@@ -5,17 +5,22 @@
             <input class="span2" id="add-tag-text" type="text" data-provide="typeahead">
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
-        <h5>Symptoms</h5>
-        <div>
-            {{#each symptomTags}}
-                <span class="tag label" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-            {{/each}}
-        </div>
-        <div>
-            {{#each tags}}
-                <span class="tag label" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-            {{/each}}
-        </div>
+        {{#if symptomTags}}
+            <h5>Symptoms</h5>
+            <div>
+                {{#each symptomTags}}
+                    <span class="tag label" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                {{/each}}
+            </div>
+        {{/if}}
+        {{#if tags}}
+            <h5>Reviewed Tags</h5>
+            <div>
+                {{#each tags}}
+                    <span class="tag label" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                {{/each}}
+            </div>
+        {{/if}}
         <div class="suggested-tags">
             {{#with suggestedTags}}
             <h4>Suggested Tags</h4>

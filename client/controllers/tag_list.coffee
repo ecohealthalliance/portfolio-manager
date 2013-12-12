@@ -48,15 +48,20 @@ Template.tagList.helpers(
         groupedWords = []
         i = 0
         while (i += 1) < words.length
-            if getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]) is 'symptom'
-                groupedWords.push(normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]))
+            threeWordCategory = getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
+            if threeWordCategory
+                if threeWordCategory is 'symptom'
+                    groupedWords.push(normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]))
                 i += 2
-            else if getTagCategory(words[i] + ' ' + words[i + 1]) is 'symptom'
-                groupedWords.push(normalize(words[i] + ' ' + words[i + 1]))
-                i += 1
-            else if getTagCategory(words[i]) is 'symptom'
-                groupedWords.push(normalize(words[i]))
-        _.unique(groupedWords)
+            else 
+                twoWordCategory = getTagCategory(words[i] + ' ' + words[i + 1])
+                if twoWordCategory
+                    if twoWordCategory is 'symptom'
+                        groupedWords.push(normalize(words[i] + ' ' + words[i + 1]))
+                    i += 1
+                else if getTagCategory(words[i]) is 'symptom'
+                    groupedWords.push(normalize(words[i]))
+        _.difference(_.unique(groupedWords), resource?.removedTags)
 
 
     color: () ->
