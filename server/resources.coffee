@@ -81,7 +81,8 @@ Meteor.methods(
                     importedIds.push(promedId)
                 catch error2
                     console.log "Error importing from alternate url: #{error2}"
-        Portfolios.update({'_id': portfolioId}, {
-            '$push': {resources: {'$each': importedIds}}
-        })
+        for importedId in importedIds
+            Portfolios.update({'_id': portfolioId}, {
+                '$push': {resources: importedId}
+            })
 )
