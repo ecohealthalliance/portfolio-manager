@@ -107,7 +107,8 @@ removeTag = (tag) ->
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
         tag = $('#add-tag-text').val()
-        addTag(tag)
+        if normalize(tag).replace(/\s/g, '')
+            addTag(tag)
 
     'click .suggested-tag' : (event) ->
         tag = $(event.currentTarget).text()
