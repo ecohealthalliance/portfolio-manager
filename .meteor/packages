@@ -12,3 +12,5 @@ d3
 iron-router
 http
 simple-table
+accounts-ui
+accounts-password
