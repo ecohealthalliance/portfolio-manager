@@ -6,10 +6,10 @@
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
         {{#if symptomTags}}
-            <h5>Symptoms</h5>
+            <h5>Possible Symptoms&nbsp;&nbsp;<button id="accept-all-symptom-tags" class="btn btn-primary btn-mini">Accept all</button></h5>
             <div>
                 {{#each symptomTags}}
-                    <span class="tag label auto-tag" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                    <span class="tag label auto-tag symptom-tag" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
                 {{/each}}
             </div>
         {{/if}}

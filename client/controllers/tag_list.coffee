@@ -123,6 +123,12 @@ Template.tagList.events(
     'click .remove-tag': (event) ->
         tag = $(event.currentTarget).parents('.tag').attr('tag')
         removeTag(tag)
+
+    'click #accept-all-symptom-tags': (event) ->
+        $('.symptom-tag').each((index, tagElement) ->
+            tag = $(tagElement).find('.tag-text').text()
+            addTag(tag)
+        )
 )
 
 Template.tagList.rendered = () ->
