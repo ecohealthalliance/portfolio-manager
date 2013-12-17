@@ -38,7 +38,9 @@ Template.tagList.helpers(
     tags: () ->
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
-        resource?.tags
+        _.filter(_.keys(resource?.tags or {}), (tag) ->
+            not resource.tags[tag].removed
+        )
 
     symptomTags: () ->
         promedId = Session.get('selectedResource')
@@ -61,7 +63,7 @@ Template.tagList.helpers(
                     i += 1
                 else if getTagCategory(words[i]) is 'symptom'
                     groupedWords.push(normalize(words[i]))
-        _.difference(_.unique(groupedWords), resource?.removedTags)
+        _.difference(_.unique(groupedWords), _.keys(resource?.tags or {}))
 
 
     color: () ->
@@ -114,8 +116,8 @@ Template.tagList.events(
         tag = $(event.currentTarget).text()
         addTag(tag)
 
-    'click .auto-tag' : (event) ->
-        tag = $(event.currentTarget).find('.tag-text').text()
+    'click .auto-tag :not(.remove-tag)' : (event) ->
+        tag = $(event.currentTarget).parent().find('.tag-text').text()
         addTag(tag)
 
     'click .remove-tag': (event) ->

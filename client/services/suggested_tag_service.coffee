@@ -21,8 +21,10 @@ normalize = (tag) ->
         for reportId in linkedReports
             resource = resources().findOne({promedId: reportId})
             if resource?.tags
-                linkedTags = linkedTags.concat(resource.tags)
-        _.unique(_.difference(linkedTags, selectedResource?.tags))
+                linkedTags = linkedTags.concat(_.filter(_.keys(resource.tags), (tag) ->
+                    not resource.tags[tag].removed
+                ))
+        _.unique(_.difference(linkedTags, _.keys(selectedResource?.tags or {})))
 
     getRecentTags: (selectedResource) =>
         recentTags = (tag.name for tag in tags().find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
