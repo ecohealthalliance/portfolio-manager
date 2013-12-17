@@ -32,8 +32,8 @@ Meteor.subscribe('popularTags')
 
 
 Template.tagList.helpers(
-    isResourceSelected: () ->
-        Session.get('selectedResource')
+    showTagList: () ->
+        Meteor.userId() and Session.get('selectedResource')
     
     tags: () ->
         promedId = Session.get('selectedResource')

@@ -4,7 +4,7 @@ Portfolios = @portfolioManager.collections.Portfolios
 Resources.allow(
     update: (userId, document, fields, changes) ->
       console.log "#{new Date()}: user #{userId} updated #{document._id} with #{JSON.stringify(changes)}"
-      true
+      userId
 )
 
 Meteor.publish('resources', () ->
