@@ -14,6 +14,7 @@ zoom_lon_regex = re.compile('LatLng\(\d+\.\d+,\s(\-?\d+\.\d+)\)')
 zoom_level_regex = re.compile('setZoom\((\d+)\)')
 long_label_regex = re.compile('Subject\:.*?Archive Number')
 html_markup_regex = re.compile('<.*?>', flags=re.MULTILINE)
+extra_space_regex = re.compile('\s+', flags=re.MULTILINE)
 
 def import_promed(db, id):
     url = "http://www.promedmail.org/getPost.php?alert_id=%s" % id
@@ -82,7 +83,8 @@ def import_promed(db, id):
                     if zoomLevelMatch:
                         zoomLevel = zoomLevelMatch.group(1)
                     content = re.sub(html_markup_regex, ' ', content)
-                    label = long_label_regex.search(content).group(0)[9:-15]
+                    content = re.sub(extra_space_regex, ' ', content)
+                    label = long_label_regex.search(content).group(0)[9:-15].strip()
                     linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(content)]
                     promed_id = id.split('.')[1]
 
