@@ -1,8 +1,13 @@
 <template name="tagList">
     {{#if showTagList}}
         <h3>Resource Tags</h3>
+        <select id="add-tag-category" class="span2">
+            <option value="symptom">Symptom</option>
+            <option value="disease">Disease</option>
+        </select>
         <div class="input-append">
             <input class="span2" id="add-tag-text" type="text" data-provide="typeahead">
+            
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
         {{#if symptomTags}}

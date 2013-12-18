@@ -100,8 +100,8 @@ Template.tagList.helpers(
         }    
 )
 
-addTag = (tag) ->
-    @portfolioManager.services.tagService.addTag(tag)
+addTag = (tag, category) ->
+    @portfolioManager.services.tagService.addTag(tag, category)
 
 removeTag = (tag) ->
     @portfolioManager.services.tagService.removeTag(tag)
@@ -109,8 +109,9 @@ removeTag = (tag) ->
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
         tag = $('#add-tag-text').val()
+        category = $('#add-tag-category').val()
         if normalize(tag).replace(/\s/g, '')
-            addTag(tag)
+            addTag(tag, category)
 
     'click .suggested-tag' : (event) ->
         tag = $(event.currentTarget).text()

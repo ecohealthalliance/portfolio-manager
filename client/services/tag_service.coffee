@@ -11,9 +11,10 @@ tags = () =>
     @portfolioManager.collections.Tags
 
 @portfolioManager.services.tagService = {
-    addTag: (tag) ->
+    addTag: (tag, category) ->
+        console.log category
         if not tags().findOne({name: tag})
-            tags().insert({name: tag, category: 'user-added', userId: Meteor.userId()})
+            tags().insert({name: tag, category: category, userId: Meteor.userId()})
         tagId = tags().findOne({name: tag})._id
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
