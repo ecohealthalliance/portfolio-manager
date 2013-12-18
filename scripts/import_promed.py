@@ -81,7 +81,7 @@ def import_promed(db, id):
                     zoomLevelMatch = zoom_level_regex.search(content)
                     if zoomLevelMatch:
                         zoomLevel = zoomLevelMatch.group(1)
-                    content = re.sub(html_markup_regex, '', content)
+                    content = re.sub(html_markup_regex, ' ', content)
                     label = long_label_regex.search(content).group(0)[9:-15]
                     linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(content)]
                     promed_id = id.split('.')[1]

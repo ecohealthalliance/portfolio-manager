@@ -25,6 +25,7 @@ if __name__ == '__main__':
                 values = line.split(',')
                 if '(' in values[0]:
                     name = "%s,%s" % (values[0], values[1])
+                    name = name.replace('"', '').strip()
                     promedId = values[3]
                     if not name in portfolios_to_import:
                         portfolios_to_import[name] = []
@@ -43,7 +44,6 @@ if __name__ == '__main__':
             except Exception as e:
                 print "Error importing %s: %s" % (resource, e)
 
-        name = name.replace('"', '')
         disease, details = name.replace(')', '').split('(')
         location, year = details.split(',')
 
