@@ -12,7 +12,6 @@ tags = () =>
 
 @portfolioManager.services.tagService = {
     addTag: (tag, category) ->
-        console.log category
         if not tags().findOne({name: tag})
             tags().insert({name: tag, category: category, userId: Meteor.userId()})
         tagId = tags().findOne({name: tag})._id
