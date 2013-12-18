@@ -50,6 +50,7 @@ Template.resourcesList.helpers(
 Template.resourcesList.events(
     'click .resource-list-item' : (event) ->
         promedId = $(event.currentTarget).attr('promed-id')
+        $('#selected-resource').parent().scrollTop(0)
         Session.set('selectedResource', promedId)
 )
 
