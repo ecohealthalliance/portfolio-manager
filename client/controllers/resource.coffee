@@ -1,3 +1,7 @@
+getPortfolio = (id) =>
+    Portfolios = @portfolioManager.collections.Portfolios
+    Portfolios.findOne({_id: id})
+
 getResource = (promedId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({promedId: promedId})
@@ -17,6 +21,9 @@ normalize = (tag) ->
 
 
 Template.resource.helpers(
+    selectedPortfolio: () ->
+        getPortfolio(Session.get('selectedPortfolio'))
+
     isResourceSelected: () ->
         Session.get('selectedResource')
 

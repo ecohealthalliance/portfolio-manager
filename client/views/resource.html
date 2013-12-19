@@ -8,6 +8,10 @@
             {{/if}}
         {{/each}}
     {{else}}
-        <h4>Select a resource</h4>
+        {{#with selectedPortfolio}}
+            <h4><a id="export" class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportPortfolio'}}">Export portfolio</a></h4>
+        {{/with}}
+        or
+        <h4><-- Select a resource</h4>
     {{/if}}
 </template>
