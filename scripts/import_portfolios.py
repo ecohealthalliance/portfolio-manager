@@ -39,7 +39,7 @@ if __name__ == '__main__':
         for resource in resources:
             try:
                 import_promed(db, resource)
-                imported_resources.append(resource.split('.')[1])
+                imported_resources.append(resource)
                 print "Imported %s" % resource
             except Exception as e:
                 print "Error importing %s: %s" % (resource, e)

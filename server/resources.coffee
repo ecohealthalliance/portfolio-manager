@@ -31,9 +31,8 @@ Meteor.methods(
                 post = post.replace(/<.*?>/g, '')
                 label = />.*?Archive Number/.exec(post)[0][2...-15]
                 linkedReports = (reportId.split('.')[1] for  reportId in post.match(/\d{8}\.\d+/g))
-                promedId = id.split('.')[1]
-                Resources.upsert({promedId: promedId}, {
-                    promedId: promedId
+                Resources.upsert({promedId: id}, {
+                    promedId: id
                     title: label
                     content: post
                     linkedReports: linkedReports
@@ -42,7 +41,7 @@ Meteor.methods(
                     zoomLevel: zoomLevel
                 })
                 console.log "ProMED report #{id} imported"
-                importedIds.push(promedId)
+                importedIds.push(id)
             catch error
                 console.log "Error importing #{id}: #{error}, trying alternate"
                 url = "http://www.promedmail.org/pm.server.php"
@@ -67,9 +66,8 @@ Meteor.methods(
                     content = content.replace(/<.*?>/g, '')
                     label = /Subject\:.*?Archive Number/.exec(content)[0][9...-15]
                     linkedReports = (reportId.split('.')[1] for  reportId in content.match(/\d{8}\.\d+/g))
-                    promedId = id.split('.')[1]
-                    Resources.upsert({promedId: promedId}, {
-                        promedId: promedId
+                    Resources.upsert({promedId: id}, {
+                        promedId: id
                         title: label
                         content: content
                         linkedReports: linkedReports
@@ -78,7 +76,7 @@ Meteor.methods(
                         zoomLevel: zoomLevel
                     })
                     console.log "ProMED report #{id} imported"
-                    importedIds.push(promedId)
+                    importedIds.push(id)
                 catch error2
                     console.log "Error importing from alternate url: #{error2}"
         for importedId in importedIds

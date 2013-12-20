@@ -39,11 +39,10 @@ def import_promed(db, id):
             else:
                 label = id
 
-            linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(report)]
-            promed_id = id.split('.')[1]
+            linked_reports = [report_id for report_id in report_id_regex.findall(report)]
 
-            resources.update({'promedId': promed_id}, {
-                'promedId': promed_id,
+            resources.update({'promedId': id}, {
+                'promedId': id,
                 'title': label,
                 'content': post,
                 'linkedReports': linked_reports,
@@ -85,12 +84,11 @@ def import_promed(db, id):
                     content = re.sub(html_markup_regex, ' ', content)
                     content = re.sub(extra_space_regex, ' ', content)
                     label = long_label_regex.search(content).group(0)[9:-15].strip()
-                    linked_reports = [report_id.split('.')[1] for report_id in report_id_regex.findall(content)]
-                    promed_id = id.split('.')[1]
+                    linked_reports = [report_id for report_id in report_id_regex.findall(content)]
 
-                    db.resources.update({'promedId': promed_id}, {
+                    db.resources.update({'promedId': id}, {
                         '_id': str(ObjectId()),
-                        'promedId': promed_id,
+                        'promedId': id,
                         'title': label,
                         'content': content,
                         'linkedReports': linked_reports,
