@@ -3,7 +3,9 @@
     {{#each portfolios}}
       {{> portfolioIcon}}
     {{/each}}
-    {{> buildButton}}
+    {{#if loggedIn}}
+      {{> buildButton}}
+    {{/if}}
   </div>
 </template>
 

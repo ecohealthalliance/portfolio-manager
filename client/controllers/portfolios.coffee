@@ -27,6 +27,9 @@ Router.map () ->
 Template.portfolioIcons.helpers(
     portfolios: () ->
         getPortfolios().find()
+
+    loggedIn: () ->
+        Meteor.userId()
 )
 
 Template.portfolioIcon.helpers(
