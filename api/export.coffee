@@ -1,3 +1,7 @@
+getPortfolios = () =>
+    Portfolios = @portfolioManager.collections.Portfolios
+    Portfolios.find().fetch()
+
 getPortfolio = (id) ->
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.findOne({_id: id})
@@ -27,6 +31,40 @@ greatCircleDistance = (lat1, lon1, lat2, lon2) ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
     R * c
 
+createGraph = (resources) ->
+    nodes = []
+    edges = []
+    infoLinks = {}
+    for resource in resources
+        node = {
+            promed_id: resource.promedId
+            title: resource.title
+            lat: resource.zoomLat
+            lon: resource.zoomLon
+            symptoms: []
+        }
+        tags = _.keys(resource.tags or [])
+        for tag in tags
+            if getTagCategory(tag) is 'symptom'
+                node.symptoms.push(tag)
+        infoLinks[resource.promedId] = resource.linkedReports
+        nodes.push(node)
+    for node1 in nodes
+        for node2 in nodes
+            if node1 isnt node2
+                infoLink = (if node2.promed_id in infoLinks[node1.promed_id] then true else false)
+                matchingSymptoms = _.intersection(node1.symptoms, node2.symptoms).length
+                if node1.lat and node1.lon and node2.lat and node2.lon
+                    distance = greatCircleDistance(node1.lat, node1.lon, node2.lat, node2.lon)
+                edges.push({
+                    source: node1.promed_id
+                    target: node2.promed_id
+                    info_link: infoLink
+                    matching_symptoms: matchingSymptoms
+                    geo_distance: distance
+                })
+    {nodes: nodes, links: edges}
+
 Router.map () ->
     @route('exportPortfolio', {
         path: '/server/portfolio/:_id/export'
@@ -39,43 +77,15 @@ Router.map () ->
     )
 
     @route('exportGraph', {
-        path: '/server/graph/:_id/export'
+        path: '/server/graph/:_id?/export'
         where: 'server'
         action: () ->
-            portfolio = getPortfolio(@params._id)
-            resources = getResources(portfolio.resources)
-            nodes = []
-            edges = []
-            infoLinks = {}
-            for resource in resources
-                node = {
-                    promed_id: resource.promedId
-                    title: resource.title
-                    lat: resource.zoomLat
-                    lon: resource.zoomLon
-                    symptoms: []
-                }
-                tags = _.keys(resource.tags or [])
-                for tag in tags
-                    if getTagCategory(tag) is 'symptom'
-                        node.symptoms.push(tag)
-                infoLinks[resource.promedId] = resource.linkedReports
-                nodes.push(node)
-            for node1 in nodes
-                for node2 in nodes
-                    if node1 isnt node2
-                        infoLink = (if node2.promed_id in infoLinks[node1.promed_id] then true else false)
-                        matchingSymptoms = _.intersection(node1.symptoms, node2.symptoms).length
-                        if node1.lat and node1.lon and node2.lat and node2.lon
-                            distance = greatCircleDistance(node1.lat, node1.lon, node2.lat, node2.lon)
-                        edges.push({
-                            source: node1.promed_id
-                            target: node2.promed_id
-                            info_link: infoLink
-                            matching_symptoms: matchingSymptoms
-                            geo_distance: distance
-                        })
+            ids = if @params._id then [@params._id] else (portfolio._id for portfolio in getPortfolios())
+            portfolios = (getPortfolio(id) for id in ids)
+            resources = []
+            for portfolio in portfolios
+                resources = resources.concat(getResources(portfolio.resources))
             @response.setHeader('Content-Type', 'application/json')
-            @response.write(JSON.stringify({nodes: nodes, links: edges}))
+            @response.write(JSON.stringify(createGraph(resources)))
         }
     )
