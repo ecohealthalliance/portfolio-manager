@@ -5,6 +5,7 @@ from import_diseases import import_diseases
 from import_symptoms import import_symptoms
 from import_disease_ontology import import_disease_ontology
 from import_tag_ideas import import_tag_ideas
+from import_locations import import_locations
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -18,3 +19,4 @@ if __name__ == '__main__':
     import_symptoms(db)
     import_disease_ontology(db)
     import_tag_ideas(db)
+    import_locations(db)
