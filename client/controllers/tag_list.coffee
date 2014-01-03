@@ -118,6 +118,13 @@ removeTag = (tag) ->
     
 toggleTagHighlight = (tag) ->
     @portfolioManager.services.tagService.toggleTagHighlight(tag)
+    if tag in getHighlightedTags()
+        scrollToTag = () ->
+            tagSelector = ".tag:contains(#{tag})"
+            tagElement = $('#selected-resource').find(tagSelector)
+            tagElement[0].scrollIntoView(false)
+        setTimeout(scrollToTag, 0)
+        
 
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
