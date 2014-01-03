@@ -40,7 +40,7 @@ tags = () =>
             dateRemoved: new Date()
             removed: true
         resources().update({'_id': resource._id}, {'$set': tagInfo})
-        if tag in _.keys(resource?.tags?)
+        if tag in _.keys(resource?.tags)
             tagId = tags().findOne({name: tag})._id
             tags().update({_id: tagId}, {'$inc': {'count': -1}})
   

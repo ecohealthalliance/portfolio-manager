@@ -16,6 +16,9 @@ getTagCategory = (tag) =>
 addTag = (tag) ->
     @portfolioManager.services.tagService.addTag(tag)
 
+removeTag = (tag) ->
+    @portfolioManager.services.tagService.removeTag(tag)
+
 normalize = (tag) ->
     @portfolioManager.services.normalize(tag)
 
@@ -50,7 +53,13 @@ Template.resource.helpers(
 )
 
 Template.resource.events(
-    'click .tag-container': (event) ->
-        tag = $(event.currentTarget).children('.tag').html()
+    'click .tag-container :not(.remove-tag)': (event) ->
+        tag = $(event.currentTarget).parent('.tag-container').children('.tag').html()
         addTag(normalize(tag))
+
+    'click .tag-container .remove-tag': (event) ->
+        tag = $(event.currentTarget).parents('.tag-container').children('.tag').html()
+        removeTag(normalize(tag))
+        event.preventDefault()
+        false
 )

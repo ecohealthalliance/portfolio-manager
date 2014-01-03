@@ -2,7 +2,14 @@
     {{#if isResourceSelected}}
         {{#each selectedResourceWords}}
             {{#if category}}
-                <div class="tag-container"><div class="tag-category"><span class="label">{{category}}</span></div><span class="tag label" style="background-color:{{color}}">{{word}}</span></div>
+                <div class="tag-container">
+                  <div class="tag-category">
+                    <span class="label">{{category}}&nbsp;&nbsp;
+                        <span class="remove-tag">&times;</span>
+                    </span>
+                  </div>
+                  <span class="tag label" style="background-color:{{color}}">{{word}}</span>
+                </div>
             {{else}}
                 {{word}}
             {{/if}}
