@@ -10,14 +10,18 @@
             
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
-        {{#if symptomTags}}
-            <h5>Possible Symptoms&nbsp;&nbsp;<button id="accept-all-symptom-tags" class="btn btn-primary btn-mini">Accept all</button></h5>
-            <div>
-                {{#each symptomTags}}
-                    <span class="tag label auto-tag symptom-tag" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                {{/each}}
-            </div>
-        {{/if}}
+        {{#each categories}}
+            {{#with categoryTags this}}
+                {{#if this}}
+                <div class="autotag-container">
+                     <h5>Possible {{../../this}} tags&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-primary btn-mini">Accept all</button></h5>
+                    {{#each this}}
+                        <span class="tag label auto-tag" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                    {{/each}}
+                </div>
+                {{/if}}
+            {{/with}}
+        {{/each}}
         {{#if tags}}
             <h5>Reviewed Tags</h5>
             <div>

@@ -42,7 +42,7 @@ Template.tagList.helpers(
             not resource.tags[tag].removed
         )
 
-    symptomTags: () ->
+    categoryTags: (category) ->
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
         Meteor.subscribe('reportTags', resource?.content or '')
@@ -52,19 +52,23 @@ Template.tagList.helpers(
         while (i += 1) < words.length
             threeWordCategory = getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
             if threeWordCategory
-                if threeWordCategory is 'symptom'
+                if threeWordCategory is category
                     groupedWords.push(normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]))
                 i += 2
             else 
                 twoWordCategory = getTagCategory(words[i] + ' ' + words[i + 1])
                 if twoWordCategory
-                    if twoWordCategory is 'symptom'
+                    if twoWordCategory is category
                         groupedWords.push(normalize(words[i] + ' ' + words[i + 1]))
                     i += 1
-                else if getTagCategory(words[i]) is 'symptom'
+                else if getTagCategory(words[i]) is category
                     groupedWords.push(normalize(words[i]))
         _.difference(_.unique(groupedWords), _.keys(resource?.tags or {}))
 
+    categories: () ->
+        _.filter(_.unique(getTagCategory(tag) for tag in getAllTags()), (tagCategory) ->
+            tagCategory
+        )
 
     color: () ->
         getTagColor(this)
@@ -125,8 +129,8 @@ Template.tagList.events(
         tag = $(event.currentTarget).parents('.tag').attr('tag')
         removeTag(tag)
 
-    'click #accept-all-symptom-tags': (event) ->
-        $('.symptom-tag').each((index, tagElement) ->
+    'click .accept-all-auto-tags': (event) ->
+        $(event.target).parent().siblings('.auto-tag').each((index, tagElement) ->
             tag = $(tagElement).find('.tag-text').text()
             addTag(tag)
         )
