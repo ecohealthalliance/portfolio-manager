@@ -1,5 +1,9 @@
 <template name="portfolioInfo">
     <div id="portfolio-info">
-        <h4 class="portfolio-title">{{portfolio.name}}</h4>
+        {{#with portfolio}}
+            <a href="{{pathFor 'list'}}">
+                <h4 class="portfolio-title">{{name}}</h4>
+            </a>
+        {{/with}}
     </div>
 </template>
