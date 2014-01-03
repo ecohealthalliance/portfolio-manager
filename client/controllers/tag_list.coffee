@@ -19,6 +19,9 @@ suggestedTagService = () =>
 getTagCategory = (tag) =>
     suggestedTagService().tagCategory(tag)
 
+getHighlightedTags = () =>
+    Session.get('highlightedTags') or []
+
 normalize = (tag) ->
     @portfolioManager.services.normalize(tag)
 
@@ -73,6 +76,9 @@ Template.tagList.helpers(
     color: () ->
         getTagColor(this)
 
+    highlighted: (tag) ->
+        tag in getHighlightedTags()
+
     suggestedTags: () ->
         selectedResource = getResource(Session.get('selectedResource'))
 
@@ -110,6 +116,9 @@ addTag = (tag, category) ->
 removeTag = (tag) ->
     @portfolioManager.services.tagService.removeTag(tag)
     
+toggleTagHighlight = (tag) ->
+    @portfolioManager.services.tagService.toggleTagHighlight(tag)
+
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
         tag = $('#add-tag-text').val()
@@ -119,11 +128,11 @@ Template.tagList.events(
 
     'click .suggested-tag' : (event) ->
         tag = $(event.currentTarget).text()
-        addTag(tag)
+        toggleTagHighlight(tag)
 
     'click .auto-tag :not(.remove-tag)' : (event) ->
         tag = $(event.currentTarget).parent().find('.tag-text').text()
-        addTag(tag)
+        toggleTagHighlight(tag)
 
     'click .remove-tag': (event) ->
         tag = $(event.currentTarget).parents('.tag').attr('tag')

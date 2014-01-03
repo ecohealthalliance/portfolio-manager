@@ -1,7 +1,7 @@
 <template name="resource">
     {{#if isResourceSelected}}
         {{#each selectedResourceWords}}
-            {{#if category}}
+            {{#if highlighted this}}
                 <div class="tag-container">
                   <div class="tag-category">
                     <span class="label">{{category}}&nbsp;&nbsp;

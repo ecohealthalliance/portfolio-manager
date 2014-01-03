@@ -22,6 +22,9 @@ removeTag = (tag) ->
 normalize = (tag) ->
     @portfolioManager.services.normalize(tag)
 
+getHighlightedTags = () ->
+    Session.get('highlightedTags') or []
+
 
 Template.resource.helpers(
     selectedPortfolio: () ->
@@ -29,6 +32,9 @@ Template.resource.helpers(
 
     isResourceSelected: () ->
         Session.get('selectedResource')
+
+    highlighted: (tag) ->
+        tag.category and normalize(tag.word) in getHighlightedTags()
 
     selectedResourceWords: () ->
         promedId = Session.get('selectedResource')

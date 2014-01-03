@@ -44,4 +44,12 @@ tags = () =>
             tagId = tags().findOne({name: tag})._id
             tags().update({_id: tagId}, {'$inc': {'count': -1}})
   
+
+    toggleTagHighlight: (tag) ->
+        highlightedTags = Session.get('highlightedTags') or []
+        if tag in highlightedTags
+            highlightedTags = _.without(highlightedTags, tag)
+        else
+            highlightedTags.push(tag)
+        Session.set('highlightedTags', highlightedTags)
 }
