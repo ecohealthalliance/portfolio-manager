@@ -14,10 +14,10 @@ yieldTemplates =
 
 Router.map () ->
    @route('list', {
-        path: '/list/:_id'
+        path: '/list/:_id/:resourceId?'
         yieldTemplates: yieldTemplates
         before: () ->
-            Session.set('selectedResource', null)
+            Session.set('selectedResource', @params.resourceId)
             Session.set('selectedPortfolio', @params._id)
         after: () ->
             setSize = () ->
@@ -51,7 +51,7 @@ Template.resourcesList.events(
     'click .resource-list-item' : (event) ->
         promedId = $(event.currentTarget).attr('promed-id')
         $('#selected-resource').parent().scrollTop(0)
-        Session.set('selectedResource', promedId)
+        Router.go('list', {_id: Session.get('selectedPortfolio'), resourceId: promedId})
 )
 
 Template.resourceListItem.helpers(
