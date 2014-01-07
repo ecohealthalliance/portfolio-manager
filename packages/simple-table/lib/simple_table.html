@@ -25,4 +25,8 @@
         {{/each}}
         </tbody>
     </table>
+    <div class="simple-table-navigation" simple-table-id="{{identifier}}">
+        <p>Show&nbsp;<input class="rows-per-page" type="text" value="{{getRowsPerPage}}" />&nbsp;rows per page</p>
+        <p>Page&nbsp;<input class="current-page" type="text" value="{{getCurrentPage}}" />&nbsp;of {{getPageCount}}</p>
+    </div>
 </template>

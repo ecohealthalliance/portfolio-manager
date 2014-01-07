@@ -1,0 +1,12 @@
+.simple-table .sortable {
+    cursor: pointer;
+    color: black;
+}
+
+.simple-table .sort-selected {
+    color: black;
+}
+
+.simple-table-navigation input {
+    width: 25px;
+}
