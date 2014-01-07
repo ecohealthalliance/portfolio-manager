@@ -3,7 +3,7 @@
         <thead>
             <tr>
             {{#each fields}}
-                {{#if isSortKey ../identifier}}
+                {{#if isSortKey this ../identifier}}
                     <th class="{{getKey}} sort-selected" key="{{getKey}}">{{getLabel}}&nbsp;&nbsp;&#x25BC;</th>
                 {{else}}
                     {{#if isSortable}}

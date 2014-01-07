@@ -19,7 +19,7 @@ if (Handlebars) {
             fields = _.without(_.keys(collection.findOne()), '_id');
         }
         var identifier = collection._name + _.uniqueId();
-        Session.setDefault(getSessionSortKey(identifier), fields[0].key);
+        Session.setDefault(getSessionSortKey(identifier), fields[0].key || fields[0]);
         Session.setDefault(getSessionRowsPerPageKey(identifier), 10);
         Session.setDefault(getSessionCurrentPageKey(identifier), 0);
         var html = Template.simpleTable({
@@ -53,8 +53,8 @@ Template.simpleTable.helpers({
         return this.label || this;
     },
 
-    "isSortKey": function (identifier) {
-        return this.key && Session.equals(getSessionSortKey(identifier), this.key);
+    "isSortKey": function (field, identifier) {
+        return Session.equals(getSessionSortKey(identifier), field.key || field);
     },
 
     "isSortable": function () {
