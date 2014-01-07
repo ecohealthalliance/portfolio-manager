@@ -14,7 +14,7 @@ var getSessionCurrentPageKey = function (identifier) {
 if (Handlebars) {
     Handlebars.registerHelper('simpleTable', function (collection, fields, attrs) {
         if (_.keys(fields).length < 1 ||
-            (_.keys(fields).length === 1 &&
+                (_.keys(fields).length === 1 &&
                 _.keys(fields)[0] === 'hash')) {
             fields = _.without(_.keys(collection.findOne()), '_id');
         }
@@ -22,7 +22,12 @@ if (Handlebars) {
         Session.setDefault(getSessionSortKey(identifier), fields[0].key);
         Session.setDefault(getSessionRowsPerPageKey(identifier), 10);
         Session.setDefault(getSessionCurrentPageKey(identifier), 0);
-        var html = Template.simpleTable({identifier: identifier, collection: collection, fields: fields, attrs: attrs});
+        var html = Template.simpleTable({
+                identifier: identifier,
+                collection: collection,
+                fields: fields,
+                attrs: attrs
+            });
         return new Handlebars.SafeString(html);
     });
 }
@@ -34,7 +39,7 @@ Template.simpleTable.helpers({
     },
 
     "getAttrs": function (attrs) {
-        attrStrings = _.map(attrs, function (attr, name) {
+        var attrStrings = _.map(attrs, function (attr, name) {
             return name + '=' + this[attr]
         }, this);
         return attrStrings.join(' ');
@@ -56,7 +61,11 @@ Template.simpleTable.helpers({
         var limit = Session.get(getSessionRowsPerPageKey(this.identifier));
         var currentPage = Session.get(getSessionCurrentPageKey(this.identifier));
         var skip = currentPage * limit;
-        return this.collection.find({}, {sort: sortQuery, skip: skip, limit: limit});
+        return this.collection.find({}, {
+            sort: sortQuery,
+            skip: skip,
+            limit: limit
+        });
     },
 
     "getRowsPerPage" : function () {
@@ -97,7 +106,7 @@ Template.simpleTable.events({
             var identifier = $(event.target).parents('.simple-table-navigation').attr('simple-table-id');
             Session.set(getSessionCurrentPageKey(identifier), currentPage);
         } catch (e) {
-            console.log("rows per page must be an integer");
+            console.log("current page must be an integer");
         }
     }
 });
