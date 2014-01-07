@@ -12,12 +12,13 @@ var getSessionCurrentPageKey = function (identifier) {
 
 
 if (Handlebars) {
-    Handlebars.registerHelper('simpleTable', function (identifier, collection, fields, attrs) {
+    Handlebars.registerHelper('simpleTable', function (collection, fields, attrs) {
         if (_.keys(fields).length < 1 ||
             (_.keys(fields).length === 1 &&
                 _.keys(fields)[0] === 'hash')) {
             fields = _.without(_.keys(collection.findOne()), '_id');
         }
+        var identifier = collection._name + _.uniqueId();
         Session.setDefault(getSessionSortKey(identifier), fields[0].key);
         Session.setDefault(getSessionRowsPerPageKey(identifier), 10);
         Session.setDefault(getSessionCurrentPageKey(identifier), 0);
