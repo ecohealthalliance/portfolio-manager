@@ -45,9 +45,17 @@ Template.simpleTable.helpers({
         return attrStrings.join(' ');
     },
 
+    "getKey": function () {
+        return this.key || this;
+    },
+
+    "getLabel": function () {
+        return this.label || this;
+    },
+
     "isSortKey": function (identifier) {
         var sortKey = Session.get(getSessionSortKey(identifier));
-        return this.key === sortKey;
+        return this.key && this.key === sortKey;
     },
 
     "isSortable": function () {
