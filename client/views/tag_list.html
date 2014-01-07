@@ -10,11 +10,23 @@
             
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
+         {{#if tags}}
+            <h5>Reviewed Tags</h5>
+            <div>
+                {{#each tags}}
+                    {{#if highlighted this}}
+                         <span class="tag label highlighted" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                    {{else}}
+                         <span class="tag label" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                    {{/if}}
+                {{/each}}
+            </div>
+        {{/if}}       
         {{#each categories}}
             {{#with categoryTags this}}
                 {{#if this}}
                 <div class="autotag-container">
-                     <h5>Possible {{../../this}} tags&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-primary btn-mini">Accept all</button></h5>
+                     <h5>Candidate {{../../this}} tags&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-primary btn-mini">Accept all</button></h5>
                     {{#each this}}
                         {{#if highlighted this}}
                             <span class="tag label auto-tag highlighted" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
@@ -26,18 +38,7 @@
                 {{/if}}
             {{/with}}
         {{/each}}
-        {{#if tags}}
-            <h5>Reviewed Tags</h5>
-            <div>
-                {{#each tags}}
-                    {{#if highlighted this}}
-                         <span class="tag label highlighted" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                    {{else}}
-                         <span class="tag label" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                    {{/if}}
-                {{/each}}
-            </div>
-        {{/if}}
+
         <div class="suggested-tags">
             {{#with suggestedTags}}
             <h4>Suggested Tags</h4>
