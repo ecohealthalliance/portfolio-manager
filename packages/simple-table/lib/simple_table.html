@@ -26,7 +26,15 @@
         </tbody>
     </table>
     <div class="simple-table-navigation" simple-table-id="{{identifier}}">
-        <p>Show&nbsp;<input class="rows-per-page" type="text" value="{{getRowsPerPage}}" />&nbsp;rows per page</p>
-        <p>Page&nbsp;<input class="current-page" type="text" value="{{getCurrentPage}}" />&nbsp;of {{getPageCount}}</p>
+        <div class="rows-per-page">Show&nbsp;<input type="text" value="{{getRowsPerPage}}" />&nbsp;rows per page</div>
+        <div class="pagination">
+            {{#if isntFirstPage}}
+                <span class="previous-page">&lt;</span>&nbsp;&nbsp;
+            {{/if}}
+            <span class="current-page">Page&nbsp;<input type="text" value="{{getCurrentPage}}" />&nbsp;of {{getPageCount}}</span>
+            {{#if isntLastPage}}
+                &nbsp;&nbsp;<span class="next-page">&gt;</span>
+            {{/if}}
+        </div>
     </div>
 </template>

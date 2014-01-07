@@ -54,8 +54,7 @@ Template.simpleTable.helpers({
     },
 
     "isSortKey": function (identifier) {
-        var sortKey = Session.get(getSessionSortKey(identifier));
-        return this.key && this.key === sortKey;
+        return this.key && Session.equals(getSessionSortKey(identifier), this.key);
     },
 
     "isSortable": function () {
@@ -84,6 +83,17 @@ Template.simpleTable.helpers({
         return 1 + Session.get(getSessionCurrentPageKey(this.identifier));
     },
 
+    "isntFirstPage" : function () {
+        return Session.get(getSessionCurrentPageKey(this.identifier)) > 0;
+    },
+
+    "isntLastPage" : function () {
+        var currentPage = 1 + Session.get(getSessionCurrentPageKey(this.identifier));
+        var rowsPerPage = Session.get(getSessionRowsPerPageKey(this.identifier));
+        var count = this.collection.find().count();
+        return currentPage < Math.ceil(count / rowsPerPage);
+    },
+
     "getPageCount" : function () {
         var rowsPerPage = Session.get(getSessionRowsPerPageKey(this.identifier));
         var count = this.collection.find().count();
@@ -98,7 +108,7 @@ Template.simpleTable.events({
         Session.set(getSessionSortKey(identifier), sortKey);
     },
 
-    "change .simple-table-navigation .rows-per-page": function (event) {
+    "change .simple-table-navigation .rows-per-page input": function (event) {
         try {
             var rowsPerPage = parseInt($(event.target).val(), 10);
             var identifier = $(event.target).parents('.simple-table-navigation').attr('simple-table-id');
@@ -108,7 +118,7 @@ Template.simpleTable.events({
         }
     },
 
-    "change .simple-table-navigation .current-page": function (event) {
+    "change .simple-table-navigation .current-page input": function (event) {
         try {
             var currentPage = parseInt($(event.target).val(), 10) - 1;
             var identifier = $(event.target).parents('.simple-table-navigation').attr('simple-table-id');
@@ -116,5 +126,19 @@ Template.simpleTable.events({
         } catch (e) {
             console.log("current page must be an integer");
         }
+    },
+
+    "click .simple-table-navigation .previous-page": function (event) {
+        var identifier = $(event.target).parents('.simple-table-navigation').attr('simple-table-id');
+        var currentPageKey = getSessionCurrentPageKey(identifier);
+        var currentPage = Session.get(currentPageKey);
+        Session.set(currentPageKey, currentPage - 1);
+    },
+
+    "click .simple-table-navigation .next-page": function (event) {
+        var identifier = $(event.target).parents('.simple-table-navigation').attr('simple-table-id');
+        var currentPageKey = getSessionCurrentPageKey(identifier);
+        var currentPage = Session.get(currentPageKey);
+        Session.set(currentPageKey, currentPage + 1);
     }
 });
