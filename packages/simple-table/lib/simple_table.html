@@ -1,14 +1,22 @@
 <template name="simpleTable">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover simple-table" simple-table-id="{{identifier}}">
         <thead>
             <tr>
             {{#each fields}}
-                <th class="{{key}}">{{label}}</th>
+                {{#if isSortKey ../identifier}}
+                    <th class="{{key}} sort-selected" key="{{key}}">{{label}}&nbsp;&nbsp;&#x25BC;</th>
+                {{else}}
+                    {{#if isSortable}}
+                        <th class="{{key}} sortable" key="{{key}}">{{label}}</th>
+                    {{else}}
+                        <th class="{{key}}" key="{{key}}">{{label}}</th>
+                    {{/if}}
+                {{/if}}
             {{/each}}
             </tr>
         </thead>
         <tbody>
-        {{#each rows}}
+        {{#each sortedRows}}
             <tr {{getAttrs ../attrs}}>
             {{#each ../fields}}
                 <td class="{{key}}">{{getField ../this}}</td>

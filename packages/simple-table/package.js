@@ -11,6 +11,7 @@ Package.on_use(function (api) {
 
     api.add_files('lib/simple_table.html', 'client');
     api.add_files('lib/simple_table.js', 'client');
+    api.add_files('lib/simple_table.css', 'client');
 
     if (api.export) {
         api.export('SimpleTable');
