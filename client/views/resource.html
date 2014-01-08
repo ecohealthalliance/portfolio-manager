@@ -21,5 +21,19 @@
         {{/with}}
         or
         <h4><-- Select a resource</h4>
+        <br />
+        <h3>Portfolio Metadata</h3>
+        {{#with selectedPortfolio}}
+            {{#if disease}}
+                <p>Disease: {{disease}}
+            {{/if}}
+            {{#if location}}
+                <p>Location: {{location}}
+            {{/if}}
+            {{#if year}}
+                <p>Year: {{year}}
+            {{/if}}
+            <p>Tags: {{> portfolioTags}}
+        {{/with}}
     {{/if}}
 </template>
