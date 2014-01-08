@@ -137,7 +137,7 @@ Template.tagList.events(
         tag = $(event.currentTarget).text()
         toggleTagHighlight(tag)
 
-    'click .auto-tag :not(.remove-tag)' : (event) ->
+    'click .tag :not(.remove-tag)' : (event) ->
         tag = $(event.currentTarget).parent().find('.tag-text').text()
         toggleTagHighlight(tag)
 

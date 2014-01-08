@@ -15,9 +15,9 @@
             <div>
                 {{#each tags}}
                     {{#if highlighted this}}
-                         <span class="tag label highlighted" style="background-color:{{color}}" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                         <span class="tag label highlighted" style="background-color:{{color}}" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
                     {{else}}
-                         <span class="tag label" tag="{{this}}">{{this}}&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                         <span class="tag label" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
                     {{/if}}
                 {{/each}}
             </div>
