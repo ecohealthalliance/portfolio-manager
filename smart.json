@@ -1,8 +1,8 @@
 {
   "packages": {
     "iron-router": {},
-    "simple-table": {
-    	"path": "packages/simple-table"
+    "reactive-table": {
+    	"path": "packages/reactive-table"
     }
   }
 }

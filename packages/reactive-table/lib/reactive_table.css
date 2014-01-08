@@ -1,0 +1,31 @@
+.reactive-table .sortable {
+    cursor: pointer;
+    color: black;
+}
+
+.reactive-table .sort-selected {
+    color: black;
+}
+
+.reactive-table-navigation input {
+    width: 25px;
+}
+
+.reactive-table-navigation .rows-per-page {
+    float: left;
+}
+
+.reactive-table-navigation .pagination {
+    float: right;
+}
+
+.reactive-table-navigation .previous-page,
+.reactive-table-navigation .next-page {
+    font-size: 130%;
+}
+
+.reactive-table-navigation .previous-page:hover,
+.reactive-table-navigation .next-page:hover {
+    cursor: pointer;
+    color: black;
+}
