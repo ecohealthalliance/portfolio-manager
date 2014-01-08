@@ -10,6 +10,10 @@ getResources = (promedIds) ->
     Resources = @portfolioManager.collections.Resources
     Resources.find({'promedId': {'$in': promedIds}}).fetch()
 
+getResource = (promedId) =>
+    Resources = @portfolioManager.collections.Resources
+    Resources.findOne({promedId: promedId})
+
 suggestedTagService = () =>
     @portfolioManager.services.suggestedTagService
 
@@ -71,6 +75,12 @@ Router.map () ->
         where: 'server'
         action: () ->
             portfolio = getPortfolio(@params._id)
+            tags = []
+            for promedId in portfolio.resources
+                resource = getResource(promedId)
+                if resource?.tags
+                    tags = _.union(tags, _.keys(resource.tags))
+                portfolio.tags = _.without(tags, undefined)
             @response.setHeader('Content-Type', 'application/json')
             @response.write(JSON.stringify(portfolio))
         }
