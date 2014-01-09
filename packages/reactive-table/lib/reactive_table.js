@@ -13,6 +13,9 @@ var getSessionCurrentPageKey = function (identifier) {
 
 if (Handlebars) {
     Handlebars.registerHelper('reactiveTable', function (collection, fields, attrs) {
+        if (!(collection instanceof Meteor.Collection)) {
+            console.log("reactiveTable error: argument is not an instance of Meteor.Collection");
+        }
         if (_.keys(fields).length < 1 ||
                 (_.keys(fields).length === 1 &&
                 _.keys(fields)[0] === 'hash')) {
