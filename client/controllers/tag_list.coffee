@@ -56,7 +56,7 @@ Template.tagList.helpers(
         matchingTags = _.map(matches, (match) ->
             match.name
         )
-        _.difference(matchingTags, _.keys(resource?.tags or {}))
+        _.difference(_.unique(matchingTags), _.keys(resource?.tags or {}))
 
     categories: () ->
         _.filter(_.unique(getTagCategory(tag) for tag in getAllTags()), (tagCategory) ->
