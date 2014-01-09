@@ -1,8 +1,3 @@
-@portfolioManager ?= {}
-@portfolioManager.services ?= {}
-
-@portfolioManager.services.diagnose = {}
-
 getPortfolios = () ->
     @portfolioManager.collections.Portfolios.find().fetch()
 
@@ -10,21 +5,24 @@ getResource = (promedId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({promedId: promedId})
 
-suggestedTagService = () =>
-    @portfolioManager.services.suggestedTagService
+tags = () =>
+    @portfolioManager.collections.Tags
 
 getTagCategory = (tag) =>
-    suggestedTagService().tagCategory(tag)
+    tags().findOne({name: tag})?.category
+
+normalize = (tag) ->
+    @portfolioManager.services.normalize(tag)
 
 getSymptomsByDisease = () ->
     symptomsByDisease = {}
     for portfolio in getPortfolios()
-        tags = []
+        portfolioTags = []
         for promedId in portfolio.resources
             resource = getResource(promedId)
             if resource?.tags
-                tags = _.union(tags, _.keys(resource.tags))
-        symptomTags = _.filter(tags, (tag) ->
+                portfolioTags = _.union(portfolioTags, _.keys(resource.tags))
+        symptomTags = _.filter(portfolioTags, (tag) ->
             getTagCategory(tag) is 'symptom'
         )
         if symptomsByDisease[portfolio.disease]
@@ -32,30 +30,33 @@ getSymptomsByDisease = () ->
         symptomsByDisease[portfolio.disease] = symptomTags
     symptomsByDisease
 
+getSymptomsFromText = (text) ->
+    words = normalize(text).split(' ') or []
+    bigrams = (words[i] + ' ' + words[i + 1] for i in [0..words.length - 1])
+    trigrams = (words[i] + ' ' + words[i + 1] + ' ' + words[i + 2] for i in [0..words.length - 2])
+    matches = tags().find({name: {'$in': words.concat(bigrams).concat(trigrams)}, category: 'symptom'}).fetch()
+    _.map(matches, (match) ->
+        match.name
+    )
 
-@portfolioManager.services.diagnose.fromSymptoms = (symptoms) =>
+
+matrixFromSymptoms = (symptoms) =>
     matchingSymptomsByDisease = {}
     for disease, diseaseSymptoms of getSymptomsByDisease()
         matches = _.intersection(symptoms, diseaseSymptoms)
         if matches.length > 0
             matchingSymptomsByDisease[disease] = matches
-
     matchingSymptomsByDisease
 
 
-@portfolioManager.services.diagnose.fromText = (text) =>
-        Meteor.subscribe('reportTags', text or '')
-        words = text.split(' ') or []
-        groupedWords = []
-        i = 0
-        while (i += 1) < words.length
-            if 'symptom' is getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
-                groupedWords.push(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
-                i += 2
-            else if 'symptom' is getTagCategory(words[i] + ' ' + words[i + 1])
-                groupedWords.push(words[i] + ' ' + words[i + 1])
-                i += 1
-            else if 'symptom' is getTagCategory(words[i])
-                groupedWords.push(words[i])
-        @portfolioManager.services.diagnose.fromSymptoms(groupedWords)
+matrixFromText = (text) =>
+    matrixFromSymptoms(getSymptomsFromText(text))
 
+
+Meteor.methods(
+    'diagnoseWithMatrixFromSymptoms' : (symptoms) ->
+        matrixFromSymptoms(symptoms)
+
+    'diagnoseWithMatrixFromText' : (text) ->
+        matrixFromText(text)
+)
