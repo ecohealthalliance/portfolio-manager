@@ -41,13 +41,14 @@ Template.resource.helpers(
         resource = getResource(promedId)
         Meteor.subscribe('reportTags', resource?.content or '')
         words = resource?.content.split(' ') or []
+        highlightedTags = getHighlightedTags()
         groupedWords = []
         i = 0
         while (i += 1) < words.length
-            if getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
+            if normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]) in highlightedTags
                 groupedWords.push(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
                 i += 2
-            else if getTagCategory(words[i] + ' ' + words[i + 1])
+            else if normalize(words[i] + ' ' + words[i + 1]) in highlightedTags
                 groupedWords.push(words[i] + ' ' + words[i + 1])
                 i += 1
             else
