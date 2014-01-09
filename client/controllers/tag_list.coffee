@@ -49,24 +49,14 @@ Template.tagList.helpers(
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
         Meteor.subscribe('reportTags', resource?.content or '')
-        words = resource?.content.split(' ') or []
-        groupedWords = []
-        i = 0
-        while (i += 1) < words.length
-            threeWordCategory = getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
-            if threeWordCategory
-                if threeWordCategory is category
-                    groupedWords.push(normalize(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2]))
-                i += 2
-            else 
-                twoWordCategory = getTagCategory(words[i] + ' ' + words[i + 1])
-                if twoWordCategory
-                    if twoWordCategory is category
-                        groupedWords.push(normalize(words[i] + ' ' + words[i + 1]))
-                    i += 1
-                else if getTagCategory(words[i]) is category
-                    groupedWords.push(normalize(words[i]))
-        _.difference(_.unique(groupedWords), _.keys(resource?.tags or {}))
+        words = normalize(resource?.content).split(' ') or []
+        bigrams = (words[i] + ' ' + words[i + 1] for i in [0..words.length - 1])
+        trigrams = (words[i] + ' ' + words[i + 1] + ' ' + words[i + 2] for i in [0..words.length - 2])
+        matches = tags().find({name: {'$in': words.concat(bigrams).concat(trigrams)}, category: category}).fetch()
+        matchingTags = _.map(matches, (match) ->
+            match.name
+        )
+        _.difference(matchingTags, _.keys(resource?.tags or {}))
 
     categories: () ->
         _.filter(_.unique(getTagCategory(tag) for tag in getAllTags()), (tagCategory) ->
