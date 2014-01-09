@@ -1,3 +1,9 @@
+To install:
+    mrt add reactive-table
+
+Add bootstrap or bootstrap-3 to style the table, or add your own css.
+
+
 This package adds a handlebars helper called reactiveTable.
 
 Call it from a template and pass it the collection to put in the table: {{reactiveTable collection}}. collection must be the actual collection, not a cursor returned by collection.find().

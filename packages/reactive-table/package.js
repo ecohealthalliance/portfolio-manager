@@ -7,7 +7,6 @@ Package.on_use(function (api) {
     api.use('handlebars', 'client');
     api.use('jquery', 'client');
     api.use('underscore', 'client');
-    api.use('bootstrap', 'client');
 
     api.add_files('lib/reactive_table.html', 'client');
     api.add_files('lib/reactive_table.js', 'client');
