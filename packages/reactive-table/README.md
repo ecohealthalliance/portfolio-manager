@@ -1,6 +1,6 @@
 This package adds a handlebars helper called reactiveTable.
 
-Call it from a template and pass it the collection to put in the table: {{reactiveTable collection}}.
+Call it from a template and pass it the collection to put in the table: {{reactiveTable collection}}. collection must be the actual collection, not a cursor returned by collection.find().
 
 To specify columns, pass an additional fields argument: {{reactiveTable collection fields}}.
 
