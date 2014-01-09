@@ -33,7 +33,7 @@ getSymptomsByDisease = () ->
     symptomsByDisease
 
 
-@portfolioManager.services.diagnose.fromSymptoms = (symptoms) ->
+@portfolioManager.services.diagnose.fromSymptoms = (symptoms) =>
     matchingSymptomsByDisease = {}
     for disease, diseaseSymptoms of getSymptomsByDisease()
         matches = _.intersection(symptoms, diseaseSymptoms)
@@ -41,3 +41,21 @@ getSymptomsByDisease = () ->
             matchingSymptomsByDisease[disease] = matches
 
     matchingSymptomsByDisease
+
+
+@portfolioManager.services.diagnose.fromText = (text) =>
+        Meteor.subscribe('reportTags', text or '')
+        words = text.split(' ') or []
+        groupedWords = []
+        i = 0
+        while (i += 1) < words.length
+            if 'symptom' is getTagCategory(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
+                groupedWords.push(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])
+                i += 2
+            else if 'symptom' is getTagCategory(words[i] + ' ' + words[i + 1])
+                groupedWords.push(words[i] + ' ' + words[i + 1])
+                i += 1
+            else if 'symptom' is getTagCategory(words[i])
+                groupedWords.push(words[i])
+        @portfolioManager.services.diagnose.fromSymptoms(groupedWords)
+

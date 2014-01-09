@@ -1,0 +1,28 @@
+<template name="diagnosis">
+    <div class="diagnosis">
+        <button id="diagnose-button" class="btn btn-primary">Diagnose</button>
+        <div id="diagnosis-results"></div>
+    </div>
+</template>
+
+<template name="diagnosisResults">
+
+    <div class="diagnosed-disease-list">
+        {{#each diseases}}
+            <div class="diagnosed-disease">
+                {{#each symptoms}}
+                    <span style="background-color:{{color}}">&nbsp;&nbsp;</span>
+                {{/each}}
+                <span>{{name}}</span>
+            </div>
+        {{else}}
+            No results
+        {{/each}}
+    </div>
+
+    <div class="diagnosed-symptom-list">
+        {{#each allSymptoms}}
+            <div class="label diagnosed-symptom" style="background-color:{{color}}">{{this}}</div>
+        {{/each}}
+    </div>
+</template>

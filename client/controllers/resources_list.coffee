@@ -17,6 +17,7 @@ Router.map () ->
         path: '/list/:_id/:resourceId?'
         yieldTemplates: yieldTemplates
         before: () ->
+            $('#diagnosis-results').empty()
             Session.set('selectedResource', @params.resourceId)
             Session.set('selectedPortfolio', @params._id)
         after: () ->
