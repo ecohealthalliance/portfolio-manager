@@ -2,6 +2,10 @@ getResource = (promedId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({promedId: promedId})
 
+getPortfolio = (portfolioId) =>
+    Portfolios = @portfolioManager.collections.Portfolios
+    Portfolios.findOne({_id: portfolioId})
+
 getPossibleDiagnoses = (content) ->
     @portfolioManager.services.diagnose.fromText(content)
 
@@ -19,6 +23,12 @@ Template.diagnosis.events(
         results = []
         if resource
             results = getPossibleDiagnoses(resource.content)
+        else
+            portfolio = getPortfolio(Session.get('selectedPortfolio'))
+            content = (getResource(promedId)?.content for promedId in portfolio.resources)
+            contentString = content.join(' ')
+            results = getPossibleDiagnoses(contentString)
+
         rankedDiseases = _.sortBy(_.keys(results), (result) ->
             -results[result].length
         )
