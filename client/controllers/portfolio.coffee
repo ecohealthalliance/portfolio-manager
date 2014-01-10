@@ -33,6 +33,8 @@ Router.map () ->
                 $('#resources-list-wrapper').height(resourcesListHeight)
             $(window).resize(setSize)
             setTimeout(setSize, 0)
+        unload: () ->
+            $('.wrapper').removeAttr('style')
     }) 
 
 Template.resourcesList.helpers(
