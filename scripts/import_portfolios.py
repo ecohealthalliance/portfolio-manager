@@ -15,28 +15,70 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     meteor_url = args.url
-    CKAN_URL = "https://ckan-datastore.s3.amazonaws.com/2013-12-05T16:54:56.230Z/portfolio-candidates-events.csv"
+    CKAN_URL = "https://ckan-datastore.s3.amazonaws.com/2014-01-10T17:12:08.841Z/portfolio-candidates-events-1.csv"
 
     portfolios_to_import = {}
 
     with contextlib.closing(urlopen(CKAN_URL)) as raw_csv:
         for line in raw_csv.read().split('\n')[1:]:
-            if line:
+            if line and not line.startswith(','):
                 values = line.split(',')
-                if '(' in values[0]:
+                if '(' in values[0] and not values[1].startswith('http'):
                     name = "%s,%s" % (values[0], values[1])
                     name = name.replace('"', '').strip()
-                    promedId = values[3]
+                    print "%s already imported" % name
+                else:
+                    name = values[0]
+                    isEncephIndia = False
+                    if name == 'Encephalidities (India)':
+                        isEncephIndia = True
+                        name = values[2]
+                        i = 3
+                        while (len(values) > i + 1) and values[i] != '':
+                            name += values[i]
+                            i = i + 1
+                        name = name.replace('"', '')
                     if not name in portfolios_to_import:
-                        portfolios_to_import[name] = []
-                    portfolios_to_import[name].append(promedId)
+                        if isEncephIndia:
+                                portfolios_to_import[name] = {
+                                    'resources': [],
+                                }
+                        elif '(' in name:
+                            disease, details = name.replace(')', '').split('(')
+                            if ',' in details:
+                                location, year = details.split(',')
+                                portfolios_to_import[name] = {
+                                    'resources': [],
+                                    'disease': disease.strip(),
+                                    'location': location.strip(),
+                                    'year': year.strip(),
+                                }
+                            else:
+                                location = details
+                                portfolios_to_import[name] = {
+                                    'resources': [],
+                                    'disease': disease.strip(),
+                                    'location': location.strip(),
+                                }
+                        else:
+                            disease = name
+                            if not name in portfolios_to_import:
+                                portfolios_to_import[name] = {
+                                    'resources': [],
+                                    'disease': disease.strip()
+                                }
+                    if '=' in values[1]:
+                        promedId = values[1].split('=')[1]
+                        portfolios_to_import[name]['resources'].append(promedId)
+
 
     db = pymongo.Connection('localhost', int(args.port))[args.db]
     portfolios = db.portfolios
 
-    for name, resources in portfolios_to_import.iteritems():
+    print portfolios_to_import
+    for name, info in portfolios_to_import.iteritems():
         imported_resources = []
-        for resource in resources:
+        for resource in info['resources']:
             try:
                 import_promed(db, resource)
                 imported_resources.append(resource)
@@ -44,15 +86,14 @@ if __name__ == '__main__':
             except Exception as e:
                 print "Error importing %s: %s" % (resource, e)
 
-        disease, details = name.replace(')', '').split('(')
-        location, year = details.split(',')
-
-        portfolioId = portfolios.insert({
-            '_id': str(ObjectId()),
-            'name': name,
-            'disease': disease.strip(),
-            'location': location.strip(),
-            'year': year.strip(),
-            'createDate': datetime.now(),
-            'resources': imported_resources,
-        })
+        if not portfolios.find_one({'name': name}) and len(imported_resources) > 0:
+            portfolioId = portfolios.insert({
+                '_id': str(ObjectId()),
+                'name': name,
+                'disease': info.get('disease'),
+                'location': info.get('location'),
+                'year': info.get('year'),
+                'createDate': datetime.now(),
+                'resources': imported_resources,
+            })
+            print "Imported %s" % name

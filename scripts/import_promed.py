@@ -61,9 +61,11 @@ def import_promed(db, id):
             with contextlib.closing(urlopen(url, urlencode(searchParams))) as search_response:
                 searchResponseText = search_response.read()
                 searchIdMatch = search_id_regex.search(searchResponseText)
+                searchId = id
                 if not searchIdMatch:
                     print searchResponseText
-                searchId = searchIdMatch.group(1)
+                else:
+                    searchId = searchIdMatch.group(1)
                 previewParams = {
                     'xajax': 'preview',
                     'xajaxr': int(time.time()),
