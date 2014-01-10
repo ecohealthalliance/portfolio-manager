@@ -1,0 +1,12 @@
+<template name="portfolioMetadata">
+    {{#if disease}}
+        <p>Disease: {{disease}}
+    {{/if}}
+    {{#if location}}
+        <p>Location: {{location}}
+    {{/if}}
+    {{#if year}}
+        <p>Year: {{year}}
+    {{/if}}
+    <p>Tags: {{> portfolioTags}}
+</template>
