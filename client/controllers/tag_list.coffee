@@ -48,8 +48,7 @@ Template.tagList.helpers(
     categoryTags: (category) ->
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
-        Meteor.subscribe('reportTags', resource?.content or '')
-        words = normalize(resource?.content).split(' ') or []
+        words = normalize(resource?.content or '').split(' ') or []
         bigrams = (words[i] + ' ' + words[i + 1] for i in [0..words.length - 1])
         trigrams = (words[i] + ' ' + words[i + 1] + ' ' + words[i + 2] for i in [0..words.length - 2])
         matches = tags().find({name: {'$in': words.concat(bigrams).concat(trigrams)}, category: category}).fetch()

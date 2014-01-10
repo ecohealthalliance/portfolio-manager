@@ -11,8 +11,8 @@ getPortfolio = (portfolioId) =>
     Portfolios.findOne({_id: portfolioId})
 
 Router.map () ->
-   @route('list', {
-        path: '/list/:_id/:resourceId?'
+   @route('portfolio', {
+        path: '/portfolio/:_id/:resourceId?'
         before: () ->
             $('#diagnosis-results').empty()
             Session.set('selectedResource', @params.resourceId)
@@ -55,7 +55,7 @@ Template.resourcesList.events(
     'click .resource-list-item' : (event) ->
         promedId = $(event.currentTarget).attr('promed-id')
         $('#selected-resource').parent().scrollTop(0)
-        Router.go('list', {_id: Session.get('selectedPortfolio'), resourceId: promedId})
+        Router.go('portfolio', {_id: Session.get('selectedPortfolio'), resourceId: promedId})
 )
 
 Template.resourceListItem.helpers(
