@@ -47,8 +47,6 @@ Template.resourcesList.helpers(
                 resourceIds = portfolio.resources
                 query = {promedId: {'$in': resourceIds}}
                 getResources(query)
-            else
-                getResources({}, {limit: 50})
 )
 
 Template.resourcesList.events(
