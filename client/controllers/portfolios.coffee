@@ -1,5 +1,3 @@
-Meteor.subscribe('portfolios')
-
 getPortfolios = () =>
     @portfolioManager.collections.Portfolios
 
@@ -7,21 +5,19 @@ clearSelections = () ->
     Session.set('selectedResource', null)
     Session.set('selectedPortfolio', null)
 
-yieldTemplates =
-    'portfolio-icons-nav': {to: 'icons-nav'}
-    'portfolio-table-nav': {to: 'table-nav'}
-
 Router.map () ->
     @route('portfolioIcons', {
         path: '/portfolios/icons'
         before: clearSelections
-        yieldTemplates: yieldTemplates
+        waitOn:
+            Meteor.subscribe('portfolios')
     })
 
     @route('portfolioTable', {
         path: '/portfolios/table'
         before: clearSelections
-        yieldTemplates: yieldTemplates
+        waitOn:
+            Meteor.subscribe('portfolios')
     })
 
 Template.portfolioIcons.helpers(

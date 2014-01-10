@@ -1,25 +1,28 @@
-Meteor.subscribe('resources')
-
 getResources = (query, options) =>
     Resources = @portfolioManager.collections.Resources
     Resources.find(query, options)
+
+getResource = (promedId) =>
+    Resources = @portfolioManager.collections.Resources
+    Resources.findOne({promedId: promedId})
 
 getPortfolio = (portfolioId) =>
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.findOne({_id: portfolioId})
 
-yieldTemplates =
-    'portfolio-icons-nav': {to: 'icons-nav'}
-    'portfolio-table-nav': {to: 'table-nav'}
-
 Router.map () ->
    @route('list', {
         path: '/list/:_id/:resourceId?'
-        yieldTemplates: yieldTemplates
         before: () ->
             $('#diagnosis-results').empty()
             Session.set('selectedResource', @params.resourceId)
             Session.set('selectedPortfolio', @params._id)
+        waitOn: () ->
+            subscriptions = [Meteor.subscribe('resources')]
+            if @params.resourceId
+                resource = getResource(@params.resourceId)
+                subscriptions.push Meteor.subscribe('reportTags', resource?.content or '')
+            subscriptions
         after: () ->
             setSize = () ->
                 navbarHeight = $('.navbar').height()

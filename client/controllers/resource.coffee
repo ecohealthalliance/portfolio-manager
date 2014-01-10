@@ -39,7 +39,6 @@ Template.resource.helpers(
     selectedResourceWords: () ->
         promedId = Session.get('selectedResource')
         resource = getResource(promedId)
-        Meteor.subscribe('reportTags', resource?.content or '')
         words = resource?.content.split(' ') or []
         highlightedTags = getHighlightedTags()
         groupedWords = []
