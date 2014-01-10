@@ -9,4 +9,16 @@
         <p>Year: {{year}}
     {{/if}}
     <p>Tags: {{> portfolioTags}}
+    {{#if canEdit}}
+        <div class="metadata">
+            <select id="metadata-type">
+                <option value="disease">Disease</option>
+                <option value="location">Location</option>
+                <option value="year">Year</option>
+            </select>
+            <input id="metadata-value" type="text" />
+            <button class="btn btn-primary" id="add-metadata-button">Add/Edit</button>
+        </div>
+    {{/if}}
+
 </template>
