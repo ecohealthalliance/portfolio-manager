@@ -37,16 +37,12 @@ Router.map () ->
 
 Template.resourcesList.helpers(
     resources: () ->
-        query = Session.get('query')
-        if query
-            getResources({'tags': query})
-        else
-            portfolioId = Session.get('selectedPortfolio')
-            if portfolioId
-                portfolio = getPortfolio(portfolioId)
-                resourceIds = portfolio.resources
-                query = {promedId: {'$in': resourceIds}}
-                getResources(query)
+        portfolioId = Session.get('selectedPortfolio')
+        if portfolioId
+            portfolio = getPortfolio(portfolioId)
+            resourceIds = portfolio.resources
+            query = {promedId: {'$in': resourceIds}}
+            getResources(query)
 )
 
 Template.resourcesList.events(
