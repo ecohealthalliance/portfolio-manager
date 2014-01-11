@@ -9,7 +9,11 @@
 
     <div class="diagnosed-disease-list">
         {{#each diseases}}
-            <div class="diagnosed-disease">
+            {{#if svm}}
+                <div class="diagnosed-disease svm-result">
+            {{else}}
+                <div class="diagnosed-disease">
+            {{/if}}
                 {{#each symptoms}}
                     <span style="background-color:{{color}}">&nbsp;&nbsp;</span>
                 {{/each}}

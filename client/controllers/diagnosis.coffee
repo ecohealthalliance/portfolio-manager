@@ -25,15 +25,23 @@ Template.diagnosis.events(
             content = content.join(' ')
 
         $('#diagnosis-results').html('Diagnosing...')
-        Meteor.call('diagnoseWithMatrixFromText', content, (error, results) -> 
+        Meteor.call('diagnose', content, (error, results) -> 
             if error
                 console.log error
                 $('#diagnosis-results').html('Error getting diagnosis results')
             else
-                rankedDiseases = _.sortBy(_.keys(results), (result) ->
-                    -results[result].length
+                rankedDiseases = _.sortBy(_.keys(results.matrix), (result) ->
+                    -results.matrix[result].length
                 )
-                diseasesWithSymptoms = ({name: disease, symptoms: results[disease]} for disease in rankedDiseases)
+                isSVM = (disease) ->
+                    disease is results.svm
+                diseasesWithSymptoms = ({name: disease, symptoms: results.matrix[disease], svm: isSVM(disease)} for disease in rankedDiseases)
+                unless results.svm in rankedDiseases
+                    diseasesWithSymptoms.push {
+                        name: results.svm
+                        symptoms: []
+                        svm: true
+                    }
                 allSymptoms = (disease.symptoms for disease in diseasesWithSymptoms)
                 allSymptoms = _.union(_.flatten(allSymptoms))
                 html = Template.diagnosisResults({diseases: diseasesWithSymptoms, allSymptoms: allSymptoms})
