@@ -14,21 +14,33 @@ getTagCategory = (tag) =>
 normalize = (tag) ->
     @portfolioManager.services.normalize(tag)
 
+
+getSymptomsByReport = () ->
+    symptomsByReport = []
+    for portfolio in getPortfolios()
+        if portfolio.disease
+            for promedId in portfolio.resources
+                resource = getResource(promedId)
+                symptomTags = _.filter(_.keys(resource?.tags or {}), (tag) ->
+                    getTagCategory(tag) is 'symptom'
+                )
+                symptomsByReport.push(
+                    disease: portfolio.disease
+                    symptoms: symptomTags
+                )
+    symptomsByReport
+
+
 getSymptomsByDisease = () ->
     symptomsByDisease = {}
-    for portfolio in getPortfolios()
-        portfolioTags = []
-        for promedId in portfolio.resources
-            resource = getResource(promedId)
-            if resource?.tags
-                portfolioTags = _.union(portfolioTags, _.keys(resource.tags))
-        symptomTags = _.filter(portfolioTags, (tag) ->
-            getTagCategory(tag) is 'symptom'
-        )
-        if symptomsByDisease[portfolio.disease]
-            symptomTags = _.union(symptomTags, symptomsByDisease[portfolio.disease])
-        symptomsByDisease[portfolio.disease] = symptomTags
+    for report in getSymptomsByReport()
+        disease = report.disease
+        symptoms = report.symptoms
+        if symptomsByDisease[disease]
+            symptoms = _.union(symptomsByDisease[disease], symptoms)
+        symptomsByDisease[disease] = symptoms
     symptomsByDisease
+
 
 getSymptomsFromText = (text) ->
     words = normalize(text).split(' ') or []
@@ -55,7 +67,7 @@ matrixFromText = (text) =>
 
 svmFromSymptoms = (symptoms) =>
     response = HTTP.post("http://localhost:5000/diagnose", {data: {
-        training_data: getSymptomsByDisease()
+        training_data: getSymptomsByReport()
         test_data: symptoms
     }})
     response.content
