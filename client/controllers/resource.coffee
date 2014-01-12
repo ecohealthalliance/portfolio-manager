@@ -2,9 +2,9 @@ getPortfolio = (id) =>
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.findOne({_id: id})
 
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 getTagColor = (tag) =>
     @portfolioManager.services.tagColor(tag)
@@ -37,8 +37,8 @@ Template.resource.helpers(
         tag.category and normalize(tag.word) in getHighlightedTags()
 
     selectedResourceWords: () ->
-        promedId = Session.get('selectedResource')
-        resource = getResource(promedId)
+        resourceId = Session.get('selectedResource')
+        resource = getResource(resourceId)
         words = resource?.content.split(' ') or []
         highlightedTags = getHighlightedTags()
         groupedWords = []

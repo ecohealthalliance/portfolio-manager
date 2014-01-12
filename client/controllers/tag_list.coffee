@@ -1,8 +1,8 @@
 resources = () =>
     @portfolioManager.collections.Resources
 
-getResource = (promedId) =>
-    resources().findOne({promedId: promedId})
+getResource = (resourceId) =>
+    resources().findOne({_id: resourceId})
 
 getTagColor = (tag) =>
     @portfolioManager.services.tagColor(tag)
@@ -39,15 +39,15 @@ Template.tagList.helpers(
         Meteor.userId() and Session.get('selectedResource')
     
     tags: () ->
-        promedId = Session.get('selectedResource')
-        resource = getResource(promedId)
+        resourceId = Session.get('selectedResource')
+        resource = getResource(resourceId)
         _.filter(_.keys(resource?.tags or {}), (tag) ->
             not resource.tags[tag].removed
         )
 
     categoryTags: (category) ->
-        promedId = Session.get('selectedResource')
-        resource = getResource(promedId)
+        resourceId = Session.get('selectedResource')
+        resource = getResource(resourceId)
         words = normalize(resource?.content or '').split(' ') or []
         bigrams = (words[i] + ' ' + words[i + 1] for i in [0..words.length - 1])
         trigrams = (words[i] + ' ' + words[i + 1] + ' ' + words[i + 2] for i in [0..words.length - 2])

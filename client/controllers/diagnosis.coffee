@@ -1,6 +1,6 @@
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 getPortfolio = (portfolioId) =>
     Portfolios = @portfolioManager.collections.Portfolios
@@ -21,7 +21,7 @@ Template.diagnosis.events(
             content = resource.content
         else
             portfolio = getPortfolio(Session.get('selectedPortfolio'))
-            content = (getResource(promedId)?.content for promedId in portfolio.resources)
+            content = (getResource(resourceId)?.content for resourceId in portfolio.resources)
             content = content.join(' ')
 
         $('#diagnosis-results').html('Diagnosing...')

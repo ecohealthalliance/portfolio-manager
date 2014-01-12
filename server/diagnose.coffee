@@ -1,9 +1,9 @@
 getPortfolios = () ->
     @portfolioManager.collections.Portfolios.find().fetch()
 
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 tags = () =>
     @portfolioManager.collections.Tags
@@ -19,8 +19,8 @@ getSymptomsByReport = () ->
     symptomsByReport = []
     for portfolio in getPortfolios()
         if portfolio.disease
-            for promedId in portfolio.resources
-                resource = getResource(promedId)
+            for resourceId in portfolio.resources
+                resource = getResource(resourceId)
                 symptomTags = _.filter(_.keys(resource?.tags or {}), (tag) ->
                     getTagCategory(tag) is 'symptom'
                 )

@@ -4,8 +4,8 @@
 resources = () =>
     @portfolioManager.collections.Resources
 
-getResource = (promedId) =>
-    resources().findOne({promedId: promedId})
+getResource = (resourceId) =>
+    resources().findOne({_id: resourceId})
     
 tags = () =>
     @portfolioManager.collections.Tags
@@ -15,8 +15,8 @@ tags = () =>
         if not tags().findOne({name: tag})
             tags().insert({name: tag, category: category, userId: Meteor.userId()})
         tagId = tags().findOne({name: tag})._id
-        promedId = Session.get('selectedResource')
-        resource = getResource(promedId)
+        resourceId = Session.get('selectedResource')
+        resource = getResource(resourceId)
         if not _.include(resource.reviewers, Meteor.userId())
             resources().update({'_id': resource._id}, {'$push': {'reviewers': Meteor.userId()}})
         if resource.tags?[tag]?.removed or not _.include(_.keys(resource.tags or {}), tag)
@@ -31,8 +31,8 @@ tags = () =>
 
 
     removeTag: (tag) ->
-        promedId = Session.get('selectedResource')
-        resource = getResource(promedId)
+        resourceId = Session.get('selectedResource')
+        resource = getResource(resourceId)
         tagPath = "tags.#{tag}"
         tagInfo = {}
         tagInfo[tagPath] =

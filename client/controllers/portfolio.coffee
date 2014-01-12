@@ -4,9 +4,9 @@ getResources = (query, options) =>
     Resources = @portfolioManager.collections.Resources
     Resources.find(query, options)
 
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 getPortfolio = (portfolioId) =>
     Portfolios = @portfolioManager.collections.Portfolios
@@ -45,18 +45,18 @@ Template.resourcesList.helpers(
         if portfolioId
             portfolio = getPortfolio(portfolioId)
             resourceIds = portfolio.resources
-            query = {promedId: {'$in': resourceIds}}
+            query = {_id: {'$in': resourceIds}}
             getResources(query)
 )
 
 Template.resourcesList.events(
     'click .resource-list-item' : (event) ->
-        promedId = $(event.currentTarget).attr('promed-id')
+        resourceId = $(event.currentTarget).attr('resource-id')
         $('#selected-resource').parent().scrollTop(0)
-        Router.go('portfolio', {_id: Session.get('selectedPortfolio'), resourceId: promedId})
+        Router.go('portfolio', {_id: Session.get('selectedPortfolio'), resourceId: resourceId})
 )
 
 Template.resourceListItem.helpers(
     selectedClass: () ->
-        if @promedId is Session.get('selectedResource') then " selected" else ""
+        if @_id is Session.get('selectedResource') then " selected" else ""
 )

@@ -1,12 +1,12 @@
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 Template.portfolioTags.helpers(
     tags: () ->
         tags = []
-        for promedId in @resources
-            resource = getResource(promedId)
+        for resourceId in @resources
+            resource = getResource(resourceId)
             if resource?.tags
                 tags = _.union(tags, _.keys(resource.tags))
         _.without(tags, undefined)

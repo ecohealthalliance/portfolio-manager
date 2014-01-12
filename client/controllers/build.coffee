@@ -30,7 +30,7 @@ Template.build.events(
         portfolioId = createPortfolio(portfolioName, portfolioDisease, portfolioLocation, portfolioYear)
         Meteor.call('import', promedIds, portfolioId, (error, result) ->
             console.log(error.reason) if error
-            path = Router.routes['list'].path({'_id': portfolioId})
+            path = Router.routes['portfolio'].path({'_id': portfolioId})
             $('#import-done-link').attr('href', path)
             $('#import-progress').hide()
             $('#import-done').show()

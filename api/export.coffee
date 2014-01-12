@@ -6,13 +6,13 @@ getPortfolio = (id) ->
     Portfolios = @portfolioManager.collections.Portfolios
     Portfolios.findOne({_id: id})
 
-getResources = (promedIds) ->
+getResources = (resourceIds) ->
     Resources = @portfolioManager.collections.Resources
-    Resources.find({'promedId': {'$in': promedIds}}).fetch()
+    Resources.find({'_id': {'$in': resourceIds}}).fetch()
 
-getResource = (promedId) =>
+getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
-    Resources.findOne({promedId: promedId})
+    Resources.findOne({_id: resourceId})
 
 suggestedTagService = () =>
     @portfolioManager.services.suggestedTagService
@@ -76,8 +76,8 @@ Router.map () ->
         action: () ->
             portfolio = getPortfolio(@params._id)
             tags = []
-            for promedId in portfolio.resources
-                resource = getResource(promedId)
+            for resourceId in portfolio.resources
+                resource = getResource(resourceId)
                 if resource?.tags
                     tags = _.union(tags, _.keys(resource.tags))
                 portfolio.tags = _.without(tags, undefined)

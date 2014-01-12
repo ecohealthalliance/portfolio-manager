@@ -40,8 +40,9 @@ Meteor.methods(
                     zoomLon: zoomLon
                     zoomLevel: zoomLevel
                 })
+                resourceId = Resources.findOne({promedId: id})._id
                 console.log "ProMED report #{id} imported"
-                importedIds.push(id)
+                importedIds.push(resourceId)
             catch error
                 console.log "Error importing #{id}: #{error}, trying alternate"
                 url = "http://www.promedmail.org/pm.server.php"
@@ -75,8 +76,9 @@ Meteor.methods(
                         zoomLon: zoomLon
                         zoomLevel: zoomLevel
                     })
+                    resourceId = Resources.findOne({promedId: id})._id
                     console.log "ProMED report #{id} imported"
-                    importedIds.push(id)
+                    importedIds.push(resourceId)
                 catch error2
                     console.log "Error importing from alternate url: #{error2}"
         for importedId in importedIds
