@@ -1,3 +1,5 @@
+Meteor.subscribe('portfolios')
+
 getPortfolios = () =>
     @portfolioManager.collections.Portfolios
 

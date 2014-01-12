@@ -1,3 +1,5 @@
+Meteor.subscribe('resources')
+
 getResources = (query, options) =>
     Resources = @portfolioManager.collections.Resources
     Resources.find(query, options)
