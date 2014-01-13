@@ -19,6 +19,9 @@ Router.map () ->
             $('#diagnosis-results').empty()
             Session.set('selectedResource', @params.resourceId)
             Session.set('selectedPortfolio', @params._id)
+            resource = getResource(@params.resourceId)
+            resourceTags = _.keys(resource?.tags or {})
+            Session.set('highlightedTags', resourceTags)
         waitOn: () ->
             subscriptions = [Meteor.subscribe('resources')]
             if @params.resourceId
