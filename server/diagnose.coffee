@@ -22,7 +22,7 @@ getSymptomsByReport = () ->
             for resourceId in portfolio.resources
                 resource = getResource(resourceId)
                 symptomTags = _.filter(_.keys(resource?.tags or {}), (tag) ->
-                    getTagCategory(tag) is 'symptom'
+                    getTagCategory(tag) is 'symptom' and not resource.tags[tag].removed
                 )
                 symptomsByReport.push(
                     disease: portfolio.disease
@@ -66,11 +66,15 @@ matrixFromText = (text) =>
 
 
 svmFromSymptoms = (symptoms) =>
-    response = HTTP.post("http://localhost:5000/diagnose", {data: {
-        training_data: getSymptomsByReport()
-        test_data: symptoms
-    }})
-    response.content
+    try
+        response = HTTP.post("http://localhost:5000/diagnose", {data: {
+            training_data: getSymptomsByReport()
+            test_data: symptoms
+        }})
+        response.content
+    catch error
+        console.log "SVM diagnosis server unavailable"
+        null
 
 
 svmFromText = (text) =>
@@ -81,5 +85,8 @@ Meteor.methods(
     'diagnose' : (text) ->
         svmDisease = svmFromText(text)
         matrixResults = matrixFromText(text)
-        {svm: svmDisease, matrix: matrixResults}
+        if svmDisease
+            {svm: svmDisease, matrix: matrixResults}
+        else
+            {matrix: matrixResults}
 )
