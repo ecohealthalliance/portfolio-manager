@@ -27,6 +27,9 @@ or
             fn: function (value) { return value.length; }
         }
     ]
+
+For elements of nested objects and arrays, use mongo's syntax in the key: 
+    {'key': 'emails.0.address', label: 'Email Address'}
         
 Finally, you can add attributes to a row's html, by passing an attributes argument: {{reactiveTable collection fields attrs}}
 

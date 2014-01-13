@@ -41,7 +41,17 @@ if (Handlebars) {
 Template.reactiveTable.helpers({
     "getField": function (object) {
         var fn = this.fn || function (value) { return value; };
-        return fn(object[this.key || this]);
+        var key = this.key || this;
+        var keys = key.split('.');
+        var value = object;
+        _.each(keys, function (key) {
+            if (value && value[key]) {
+                value = value[key];
+            } else {
+                value = null;
+            }
+        });
+        return fn(value);
     },
 
     "getAttrs": function (attrs) {
