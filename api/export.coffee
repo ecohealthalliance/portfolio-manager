@@ -79,8 +79,11 @@ Router.map () ->
             for resourceId in portfolio.resources
                 resource = getResource(resourceId)
                 if resource?.tags
-                    tags = _.union(tags, _.keys(resource.tags))
-                portfolio.tags = _.without(tags, undefined)
+                    resourceTags = _.filter(_.keys(resource.tags), (tag) ->
+                        tag and not resource.tags[tag].removed
+                    )
+                    tags = _.union(tags, resourceTags)
+                portfolio.tags = tags
             @response.setHeader('Content-Type', 'application/json')
             @response.write(JSON.stringify(portfolio))
         }
