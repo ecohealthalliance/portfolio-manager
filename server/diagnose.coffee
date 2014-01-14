@@ -5,6 +5,10 @@ getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({_id: resourceId})
 
+getMatrix = () =>
+    Matrix = @portfolioManager.collections.Matrix
+    Matrix.find().fetch()
+
 tags = () =>
     @portfolioManager.collections.Tags
 
@@ -39,6 +43,11 @@ getSymptomsByDisease = () ->
         if symptomsByDisease[disease]
             symptoms = _.union(symptomsByDisease[disease], symptoms)
         symptomsByDisease[disease] = symptoms
+
+    for row in getMatrix()
+        if not symptomsByDisease[row.disease]
+            symptomsByDisease[row.disease] = row.symptoms
+
     symptomsByDisease
 
 

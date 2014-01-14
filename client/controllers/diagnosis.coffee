@@ -32,11 +32,11 @@ Template.diagnosis.events(
             else
                 rankedDiseases = _.sortBy(_.keys(results.matrix), (result) ->
                     -results.matrix[result].length
-                )
+                )[0..10]
                 isSVM = (disease) ->
                     disease is results.svm
                 diseasesWithSymptoms = ({name: disease, symptoms: results.matrix[disease], svm: isSVM(disease)} for disease in rankedDiseases)
-                if results.svm and not (results.svm in rankedDiseases)
+                if results.svm and not (results.svm in rankedDiseases[0..10])
                     diseasesWithSymptoms.push {
                         name: results.svm
                         symptoms: []
