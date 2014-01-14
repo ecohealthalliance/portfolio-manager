@@ -77,6 +77,7 @@ if __name__ == '__main__':
                                 'zoomLat': lat,
                                 'zoomLon': lon,
                                 'date': date,
+                                'source': 'healthmap',
                             })
                             print "Imported %s" % title
                         imported_resources.append(resourceId)
