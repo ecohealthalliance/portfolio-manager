@@ -79,7 +79,6 @@ if __name__ == '__main__':
                                 'date': date,
                                 'source': 'healthmap',
                             })
-                            print "Imported %s" % title
                         imported_resources.append(resourceId)
 
     portfolios.insert({
