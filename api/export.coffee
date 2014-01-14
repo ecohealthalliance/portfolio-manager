@@ -8,7 +8,7 @@ getPortfolio = (id) ->
 
 getResources = (resourceIds) ->
     Resources = @portfolioManager.collections.Resources
-    Resources.find({'_id': {'$in': resourceIds}}).fetch()
+    Resources.find({'_id': {'$in': resourceIds}, 'source': 'promed'}).fetch()
 
 getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources

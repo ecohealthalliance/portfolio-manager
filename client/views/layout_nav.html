@@ -1,6 +1,7 @@
 <template name="layoutNav">
 	{{> portfolioIconsNav}}
 	{{> portfolioTableNav}}
+	{{> portfolioGraphNav}}
 </template>
 
 <template name="portfolioIconsNav">
@@ -13,4 +14,10 @@
     <a id="table-button" class="btn" href="{{pathFor 'portfolioTable'}}">
         <i class="icon-align-justify"></i>
     </a>
+</template>
+
+<template name="portfolioGraphNav">
+	<a id="graph-button" class="btn" href="{{pathFor 'portfolioGraph'}}">
+		<strong>&#10035;</strong>
+	</a>
 </template>
