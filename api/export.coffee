@@ -35,7 +35,7 @@ greatCircleDistance = (lat1, lon1, lat2, lon2) ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
     R * c
 
-createGraph = (resources, nodesOnly) ->
+createGraph = (resources, nodesOnly, diagnosis) ->
     nodes = []
     edges = []
     infoLinks = {}
@@ -71,7 +71,7 @@ createGraph = (resources, nodesOnly) ->
                         matching_symptoms: matchingSymptoms
                         geo_distance: distance
                     })
-    if nodesOnly
+    if diagnosis
         dates = _.uniq(node.promed_id.split('.')[0] for node in nodes)
         dateIncrement = Math.floor(dates.length / 3)
         dateIndexes = [0, dateIncrement, dateIncrement * 2, dates.length - 1]
