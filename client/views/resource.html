@@ -24,6 +24,12 @@
         <h4><-- Select a resource</h4>
         <br />
         <h3>Portfolio Metadata</h3>
+        <div>
+            {{#with selectedPortfolio}}
+                Progress: {{reviewedCount}}/{{totalCount}} resources reviewed
+            {{/with}}
+        </div>
+        <br />
         {{#with selectedPortfolio}}
             {{> portfolioMetadata}}
         {{/with}}

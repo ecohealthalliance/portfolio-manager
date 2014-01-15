@@ -6,6 +6,10 @@ getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({_id: resourceId})
 
+getReviewedResources = (resourceIds) ->
+    Resources = @portfolioManager.collections.Resources
+    Resources.find({'_id': {'$in': resourceIds}, 'reviewed': {'$type': 3}}).fetch()
+
 getTagColor = (tag) =>
     @portfolioManager.services.tagColor(tag)
 
@@ -56,6 +60,12 @@ Template.resource.helpers(
 
     color: () ->
         getTagColor(normalize(@word))
+
+    reviewedCount: () ->
+        getReviewedResources(@resources).length
+
+    totalCount: () ->
+        @resources.length
 )
 
 Template.resource.events(

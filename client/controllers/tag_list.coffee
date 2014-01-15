@@ -37,6 +37,10 @@ Meteor.subscribe('popularTags')
 Template.tagList.helpers(
     showTagList: () ->
         Meteor.userId() and Session.get('selectedResource')
+
+    reviewed: () ->
+        resource = getResource(Session.get('selectedResource'))
+        resource and resource.reviewed
     
     tags: () ->
         resourceId = Session.get('selectedResource')
@@ -113,7 +117,17 @@ toggleTagHighlight = (tag) ->
             tagElement = $('#selected-resource').find(tagSelector)
             tagElement[0].scrollIntoView(false)
         setTimeout(scrollToTag, 0)
-        
+     
+toggleMarkResourceAsReviewed = () =>
+    resource = getResource(Session.get('selectedResource'))
+    if resource.reviewed
+        resources().update({_id: resource._id}, {'$set': {reviewed: false}}) 
+    else
+        reviewed = {
+            user: Meteor.userId()
+            date: new Date()
+        }
+        resources().update({_id: resource._id}, {'$set': {reviewed: reviewed}})
 
 Template.tagList.events(
     'click #add-tag-button' : (event) ->
@@ -169,6 +183,9 @@ Template.tagList.events(
             unless ($(element).hasClass('highlighted'))
                 toggleTagHighlight($(element).attr('tag'))
         )
+
+    'click .reviewed': (event) ->
+        toggleMarkResourceAsReviewed()
 )
 
 Template.tagList.rendered = () ->

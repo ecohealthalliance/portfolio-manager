@@ -1,7 +1,7 @@
 <template name="resourceListItem">
     <div class="resource-list-item{{selectedClass}}" resource-id="{{_id}}">
         <div class="resource-content">
-            {{#if tags}}
+            {{#if reviewed}}
                 {{title}}
             {{else}}
                 <strong>{{title}}</strong>

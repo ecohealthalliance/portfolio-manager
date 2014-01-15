@@ -1,6 +1,15 @@
 <template name="tagList">
     {{#if showTagList}}
-        <h3>Resource Tags</h3>
+        <div class="tag-heading">
+            <h3>Resource Tags</h3>
+        </div>
+        <div class="reviewed">
+            {{#if reviewed}}
+                <input type="checkbox" checked></input>&nbsp;Review Complete
+            {{else}}
+                <input type="checkbox"></input>&nbsp;Review Complete
+            {{/if}}
+        </div>
         <select id="add-tag-category" class="span2">
             <option value="symptom">Symptom</option>
             <option value="disease">Disease</option>
