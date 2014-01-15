@@ -66,6 +66,9 @@ Template.resource.helpers(
 
     totalCount: () ->
         @resources.length
+
+    progressBarLength: () ->
+        (200 * getReviewedResources(@resources).length / @resources.length) + 'px'
 )
 
 Template.resource.events(
