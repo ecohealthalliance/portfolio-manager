@@ -21,12 +21,17 @@ if __name__ == '__main__':
         for resourceId in portfolioResources:
             resource = resources.find_one(resourceId)
             if resource.get('tags'):
-                hasTags = True
-                break
+                if len(resource.get('tags').keys()) != 0:
+                    if not all(tag.get('removed') for tag in resource.get('tags').itervalues()):
+                        hasTags = True
+                        break
 
         if hasTags and (portfolio.get('name') != 'MERS'):
             for resourceId in portfolioResources:
                 resources.update({'_id': resourceId}, {'$set': {'reviewed': {
                     'date': datetime.now()
                 }}})
+        else:
+            for resourceId in portfolioResources:
+                resources.update({'_id': resourceId}, {'$set': {'reviewed': False}})
  
