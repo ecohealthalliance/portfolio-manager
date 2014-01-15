@@ -139,6 +139,30 @@ Template.tagList.events(
             tag = $(tagElement).find('.tag-text').text()
             addTag(tag)
         )
+
+    'click #hide-all-reviewed-tags': (event) ->
+        $('.reviewed-tag').each((index, element) ->
+            if ($(element).hasClass('highlighted'))
+                toggleTagHighlight($(element).attr('tag'))
+        )
+
+    'click #show-all-reviewed-tags': (event) ->
+        $('.reviewed-tag').each((index, element) ->
+            unless ($(element).hasClass('highlighted'))
+                toggleTagHighlight($(element).attr('tag'))
+        )
+
+    'click #hide-all-candidate-tags': (event) ->
+        $('.auto-tag').each((index, element) ->
+            if ($(element).hasClass('highlighted'))
+                toggleTagHighlight($(element).attr('tag'))
+        )
+
+    'click #show-all-candidate-tags': (event) ->
+        $('.auto-tag').each((index, element) ->
+            unless ($(element).hasClass('highlighted'))
+                toggleTagHighlight($(element).attr('tag'))
+        )
 )
 
 Template.tagList.rendered = () ->

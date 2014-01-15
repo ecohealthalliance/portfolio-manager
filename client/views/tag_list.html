@@ -11,17 +11,26 @@
             <button class="btn" id="add-tag-button" type="button">Add</button>
         </div>
          {{#if tags}}
-            <h5>Reviewed Tags</h5>
+            <div class="tag-heading">
+                <button id="hide-all-reviewed-tags" class="btn btn-small">Hide all</button>
+                <h5>Reviewed Tags</h5>
+                <button id="show-all-reviewed-tags" class="btn btn-small">Show all</button>
+            </div>
             <div>
                 {{#each tags}}
                     {{#if highlighted this}}
-                         <span class="tag label highlighted" style="background-color:{{color}}" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                         <span class="tag label highlighted reviewed-tag" style="background-color:{{color}}" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
                     {{else}}
-                         <span class="tag label" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+                         <span class="reviewed-tag tag label" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
                     {{/if}}
                 {{/each}}
             </div>
-        {{/if}}       
+        {{/if}}
+        <div class="tag-heading">
+            <button id="hide-all-candidate-tags" class="btn btn-small">Hide all</button>
+            <h5>Candidate Tags</h5>
+            <button id="show-all-candidate-tags" class="btn btn-small">Show all</button>
+        </div>
         {{#each categories}}
             {{#with categoryTags this}}
                 {{#if this}}
@@ -41,7 +50,9 @@
 
         <div class="suggested-tags">
             {{#with suggestedTags}}
-            <h4>Suggested Tags</h4>
+                <div class="tag-heading">
+                    <h5>Suggeted Tags</h5>
+                </div>
             {{#if top}}
                 <div>
                     {{#each top}}
