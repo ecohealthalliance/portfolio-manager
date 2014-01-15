@@ -35,7 +35,7 @@
             {{#with categoryTags this}}
                 {{#if this}}
                 <div class="autotag-container">
-                     <h5>Candidate {{../../this}} tags&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-primary btn-mini">Accept all</button></h5>
+                     <h5><button class="reject-all-auto-tags btn btn-danger btn-mini">Reject all</button>&nbsp;&nbsp;{{../../this}}&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-success btn-mini">Accept all</button></h5>
                     {{#each this}}
                         {{#if highlighted this}}
                             <span class="tag label auto-tag highlighted" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>

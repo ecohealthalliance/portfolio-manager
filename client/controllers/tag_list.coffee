@@ -140,6 +140,12 @@ Template.tagList.events(
             addTag(tag)
         )
 
+    'click .reject-all-auto-tags': (event) ->
+        $(event.target).parent().siblings('.auto-tag').each((index, tagElement) ->
+            tag = $(tagElement).find('.tag-text').text()
+            removeTag(tag)
+        )
+
     'click #hide-all-reviewed-tags': (event) ->
         $('.reviewed-tag').each((index, element) ->
             if ($(element).hasClass('highlighted'))
