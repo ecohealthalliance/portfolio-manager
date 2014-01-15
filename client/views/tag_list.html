@@ -27,11 +27,9 @@
             </div>
             <div>
                 {{#each tags}}
-                    {{#if highlighted this}}
-                         <span class="tag label highlighted reviewed-tag" style="background-color:{{color}}" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                    {{else}}
-                         <span class="reviewed-tag tag label" tag="{{this}}"><span class="tag-text">{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                    {{/if}}
+                    {{#with tagAndClass this 'reviewed-tag'}}
+                        {{> tag}}
+                    {{/with}}
                 {{/each}}
             </div>
         {{/if}}
@@ -46,11 +44,9 @@
                 <div class="autotag-container">
                      <h5><button class="reject-all-auto-tags btn btn-danger btn-mini">Reject all</button>&nbsp;&nbsp;{{../../this}}&nbsp;&nbsp;<button class="accept-all-auto-tags btn btn-success btn-mini">Accept all</button></h5>
                     {{#each this}}
-                        {{#if highlighted this}}
-                            <span class="tag label auto-tag highlighted" style="background-color:{{color}}" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                        {{else}}
-                            <span class="tag label auto-tag" tag="{{this}}"><span class='tag-text'>{{this}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
-                        {{/if}}
+                        {{#with tagAndClass this 'auto-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
                 {{/if}}
@@ -65,11 +61,9 @@
             {{#if top}}
                 <div>
                     {{#each top}}
-                        {{#if highlighted this}}
-                            <span class="tag label highlighted suggested-tag" style="background-color:{{color}}">{{this}}</span>
-                        {{else}}
-                            <span class="tag label suggested-tag">{{this}}</span>
-                        {{/if}}
+                        {{#with tagAndClass this 'suggested-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
             {{/if}}
@@ -78,11 +72,9 @@
                 <h5>From linked reports</h5>
                 <div>
                     {{#each linked}}
-                        {{#if highlighted this}}
-                             <span class="tag label highlighted suggested-tag" style="background-color:{{color}}">{{this}}</span>
-                        {{else}}
-                            <span class="tag label suggested-tag">{{this}}</span>
-                        {{/if}}
+                        {{#with tagAndClass this 'suggested-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
             {{/if}}
@@ -90,11 +82,9 @@
                 <h5>Recently used</h5>
                 <div>
                     {{#each recent}}
-                        {{#if highlighted this}}
-                             <span class="tag label highlighted suggested-tag" style="background-color:{{color}}">{{this}}</span>
-                        {{else}}
-                            <span class="tag label suggested-tag">{{this}}</span>
-                        {{/if}}
+                        {{#with tagAndClass this 'suggested-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
             {{/if}}
@@ -102,11 +92,9 @@
                 <h5>Popular</h5>
                 <div>
                     {{#each popular}}
-                        {{#if highlighted this}}
-                             <span class="tag label highlighted suggested-tag" style="background-color:{{color}}">{{this}}</span>
-                        {{else}}
-                            <span class="tag label suggested-tag">{{this}}</span>
-                        {{/if}}
+                        {{#with tagAndClass this 'suggested-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
             {{/if}}
@@ -114,15 +102,21 @@
                 <h5>From words in report</h5>
                 <div>
                     {{#each words}}
-                        {{#if highlighted this}}
-                             <span class="tag label highlighted suggested-tag" style="background-color:{{color}}">{{this}}</span>
-                        {{else}}
-                            <span class="tag label suggested-tag">{{this}}</span>
-                        {{/if}}
+                        {{#with tagAndClass this 'suggested-tag'}}
+                            {{> tag}}
+                        {{/with}}
                     {{/each}}
                 </div>
             {{/if}}
             {{/with}}
         </div>
+    {{/if}}
+</template>
+
+<template name="tag">
+    {{#if highlighted tag}}
+        <span class="tag label {{class}} highlighted" style="background-color:{{color tag}}" tag="{{tag}}"><span class='tag-text'>{{tag}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+    {{else}}
+        <span class="tag label {{class}}" tag="{{tag}}"><span class='tag-text'>{{tag}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
     {{/if}}
 </template>

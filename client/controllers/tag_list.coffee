@@ -72,6 +72,9 @@ Template.tagList.helpers(
     highlighted: (tag) ->
         tag in getHighlightedTags()
 
+    tagAndClass: (tag, cssClass) ->
+        {tag: tag, class: cssClass}
+
     suggestedTags: () ->
         selectedResource = getResource(Session.get('selectedResource'))
 
@@ -101,6 +104,14 @@ Template.tagList.helpers(
             popular: popularTags
             words: wordTags
         }    
+)
+
+Template.tag.helpers(
+    color: (tag) ->
+        getTagColor(tag)
+
+    highlighted: (tag) ->
+        tag in getHighlightedTags()
 )
 
 addTag = (tag, category) ->
@@ -140,10 +151,6 @@ Template.tagList.events(
         if normalize(tag).replace(/\s/g, '')
             addTag(tag, category)
         $('#add-tag-text').val('')
-
-    'click .suggested-tag' : (event) ->
-        tag = $(event.currentTarget).text()
-        toggleTagHighlight(tag)
 
     'click .tag :not(.remove-tag)' : (event) ->
         tag = $(event.currentTarget).parent().find('.tag-text').text()
