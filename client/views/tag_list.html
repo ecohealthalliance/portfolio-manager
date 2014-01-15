@@ -115,8 +115,24 @@
 
 <template name="tag">
     {{#if highlighted tag}}
-        <span class="tag label {{class}} highlighted" style="background-color:{{color tag}}" tag="{{tag}}"><span class='tag-text'>{{tag}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+        <span class="tag label {{class}} highlighted" style="background-color:{{color tag}}" tag="{{tag}}">
+            <span class="remove-tag"><i class="icon-remove"></i></span>
+            &nbsp;&nbsp;
+            <span class='tag-text'>{{tag}}</span>
+            {{#if canBeAccepted class}}
+                &nbsp;&nbsp;
+                <span class="accept-tag"><i class="icon-ok"></i></span>
+            {{/if}}
+        </span>
     {{else}}
-        <span class="tag label {{class}}" tag="{{tag}}"><span class='tag-text'>{{tag}}</span>&nbsp;&nbsp;<span class="remove-tag">&times;</span></span>
+        <span class="tag label {{class}}" tag="{{tag}}">
+            <span class="remove-tag"><i class="icon-remove"></i></span>
+            &nbsp;&nbsp;
+            <span class='tag-text'>{{tag}}</span>
+            {{#if canBeAccepted class}}
+                &nbsp;&nbsp;
+                <span class="accept-tag"><i class="icon-ok"></i></span>
+            {{/if}}
+        </span>
     {{/if}}
 </template>

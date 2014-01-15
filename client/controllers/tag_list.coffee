@@ -112,6 +112,9 @@ Template.tag.helpers(
 
     highlighted: (tag) ->
         tag in getHighlightedTags()
+
+    canBeAccepted: (cssClass) ->
+        cssClass isnt 'reviewed-tag'
 )
 
 addTag = (tag, category) ->
@@ -159,6 +162,10 @@ Template.tagList.events(
     'click .remove-tag': (event) ->
         tag = $(event.currentTarget).parents('.tag').attr('tag')
         removeTag(tag)
+
+    'click .accept-tag': (event) ->
+        tag = $(event.currentTarget).parents('.tag').attr('tag')
+        addTag(tag)
 
     'click .accept-all-auto-tags': (event) ->
         $(event.target).parent().siblings('.auto-tag').each((index, tagElement) ->
