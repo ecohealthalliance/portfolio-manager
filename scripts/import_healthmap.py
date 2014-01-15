@@ -33,12 +33,12 @@ if __name__ == '__main__':
 
     with open(args.file) as f:
         data = json.loads(f.read())
-        for location in data[0:10]:
+        for location in data:
             lat = location.get('lat')
             lon = location.get('lng')
             country = location.get('country')
 
-            for result in location.get('alerts')[0:20]:
+            for result in location.get('alerts'):
                 feed = result.get('feed')
                 disease = result.get('disease')
                 title = result.get('summary')
@@ -61,25 +61,28 @@ if __name__ == '__main__':
                         elif 'Error 403' in html or 'Sorry, this article is not currently available' in html:
                             html = descr
                         
-                        if not resourceId:
-                            content = re.sub(new_line_regex, ' ', html)
-                            content = re.sub(script_regex, ' ', content)
-                            content = re.sub(style_regex, ' ', content)
-                            content = re.sub(html_markup_regex, ' ', content)
-                            content = re.sub(extra_space_regex, ' ', content)
-                            if 'Error 403' in content:
-                                content = descr
+                        try:
+                            if not resourceId:
+                                content = re.sub(new_line_regex, ' ', html)
+                                content = re.sub(script_regex, ' ', content)
+                                content = re.sub(style_regex, ' ', content)
+                                content = re.sub(html_markup_regex, ' ', content)
+                                content = re.sub(extra_space_regex, ' ', content)
+                                if 'Error 403' in content:
+                                    content = descr
 
-                            resourceId = resources.insert({
-                                '_id': str(ObjectId()),
-                                'title': title,
-                                'content': content,
-                                'zoomLat': lat,
-                                'zoomLon': lon,
-                                'date': date,
-                                'source': 'healthmap',
-                            })
-                        imported_resources.append(resourceId)
+                                resourceId = resources.insert({
+                                    '_id': str(ObjectId()),
+                                    'title': title,
+                                    'content': content,
+                                    'zoomLat': lat,
+                                    'zoomLon': lon,
+                                    'date': date,
+                                    'source': 'healthmap',
+                                })
+                            imported_resources.append(resourceId)
+                        except Exception:
+                            print "error importing a resource"
 
     portfolios.insert({
         '_id': str(ObjectId()),

@@ -35,13 +35,16 @@ greatCircleDistance = (lat1, lon1, lat2, lon2) ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
     R * c
 
-createGraph = (resources) ->
+createGraph = (resources, nodesOnly) ->
     nodes = []
     edges = []
     infoLinks = {}
     for resource in resources
+        promedId = resource.promedId
+        unless '.' in promedId
+            promedId = /\d{8}\.\d+/.exec(resource.content)[0]
         node = {
-            promed_id: resource.promedId
+            promed_id: promedId
             title: resource.title
             lat: resource.zoomLat
             lon: resource.zoomLon
@@ -53,21 +56,51 @@ createGraph = (resources) ->
                 node.symptoms.push(tag)
         infoLinks[resource.promedId] = resource.linkedReports
         nodes.push(node)
-    for node1 in nodes
-        for node2 in nodes
-            if node1 isnt node2
-                infoLink = (if node2.promed_id in infoLinks[node1.promed_id] then true else false)
-                matchingSymptoms = _.intersection(node1.symptoms, node2.symptoms).length
-                if node1.lat and node1.lon and node2.lat and node2.lon
-                    distance = greatCircleDistance(node1.lat, node1.lon, node2.lat, node2.lon)
-                edges.push({
-                    source: node1.promed_id
-                    target: node2.promed_id
-                    info_link: infoLink
-                    matching_symptoms: matchingSymptoms
-                    geo_distance: distance
-                })
-    {nodes: nodes, links: edges}
+    unless nodesOnly
+        for node1 in nodes
+            for node2 in nodes
+                if node1 isnt node2
+                    infoLink = (if node2.promed_id in infoLinks[node1.promed_id] then true else false)
+                    matchingSymptoms = _.intersection(node1.symptoms, node2.symptoms).length
+                    if node1.lat and node1.lon and node2.lat and node2.lon
+                        distance = greatCircleDistance(node1.lat, node1.lon, node2.lat, node2.lon)
+                    edges.push({
+                        source: node1.promed_id
+                        target: node2.promed_id
+                        info_link: infoLink
+                        matching_symptoms: matchingSymptoms
+                        geo_distance: distance
+                    })
+    if nodesOnly
+        dates = _.uniq(node.promed_id.split('.')[0] for node in nodes)
+        dateIncrement = Math.floor(dates.length / 3)
+        dateIndexes = [0, dateIncrement, dateIncrement * 2, dates.length - 1]
+        diagnoseDates = (dates[index] for index in dateIndexes)
+
+        symptomDates = {}
+        for match in nodes
+            for symptom in match.symptoms
+                symptomDates[symptom] ?= []
+                symptomDates[symptom].push match.promed_id.split('.')[0]
+
+        firstDates = (_.min(values) for key, values of symptomDates)
+        lastDates = (_.max(values) for key, values of symptomDates)
+
+        diagnoseSymptoms = {}
+        for date in diagnoseDates
+            symptoms = _.keys(symptomDates)
+            for symptom in symptoms
+                index = _.indexOf(symptoms, symptom)
+                console.log date, index
+                if (date >= firstDates[index] and date <= lastDates[index])
+                    diagnoseSymptoms[date] ?= []
+                    diagnoseSymptoms[date].push symptom
+
+        diagnoses = {}
+        for date in diagnoseDates
+            diagnoses[date] = Meteor.call('diagnoseSymptoms', diagnoseSymptoms[date])
+
+    {nodes: nodes, links: edges, diagnoses: diagnoses}
 
 Router.map () ->
     @route('exportPortfolio', {
@@ -100,5 +133,19 @@ Router.map () ->
                 resources = resources.concat(getResources(portfolio.resources))
             @response.setHeader('Content-Type', 'application/json')
             @response.write(JSON.stringify(createGraph(resources)))
+        }
+    )
+
+    @route('exportNodes', {
+        path: '/server/nodes/:_id?/export'
+        where: 'server'
+        action: () ->
+            ids = if @params._id then [@params._id] else (portfolio._id for portfolio in getPortfolios())
+            portfolios = (getPortfolio(id) for id in ids)
+            resources = []
+            for portfolio in portfolios
+                resources = resources.concat(getResources(portfolio.resources))
+            @response.setHeader('Content-Type', 'application/json')
+            @response.write(JSON.stringify(createGraph(resources, true)))
         }
     )

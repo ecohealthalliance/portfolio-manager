@@ -98,4 +98,13 @@ Meteor.methods(
             {svm: svmDisease, matrix: matrixResults}
         else
             {matrix: matrixResults}
+
+    'diagnoseSymptoms': (symptoms) ->
+        console.log symptoms
+        svmDisease = svmFromSymptoms(symptoms)
+        matrixResults = matrixFromSymptoms(symptoms)
+        if svmDisease
+            {svm: svmDisease, matrix: matrixResults}
+        else
+            {matrix: matrixResults}
 )
