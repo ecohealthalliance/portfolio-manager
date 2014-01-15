@@ -28,11 +28,11 @@ normalize = (tag) ->
 
     getRecentTags: (selectedResource) =>
         recentTags = (tag.name for tag in tags().find({}, {sort: {lastUsedDate: -1}, limit: 10}).fetch())
-        _.unique(_.difference(recentTags, _.keys(selectedResource?.tags)))
+        _.unique(_.difference(recentTags, _.keys(selectedResource?.tags or {})))
 
     getPopularTags: (selectedResource) =>
         popularTags = (tag.name for tag in tags().find({}, {sort: {count: -1}, limit: 10}).fetch())
-        _.unique(_.difference(popularTags, _.keys(selectedResource?.tags)))
+        _.unique(_.difference(popularTags, _.keys(selectedResource?.tags or {})))
 
     getWordTags: (selectedResource) =>
         words = selectedResource?.content?.split(/\s/)
@@ -45,7 +45,7 @@ normalize = (tag) ->
         wordTags = _.sortBy(_.keys(wordCounts), (word) ->
             -wordCounts[word]
         )
-        _.unique(_.difference(wordTags, _.keys(selectedResource?.tags)))[0...10]
+        _.unique(_.difference(wordTags, _.keys(selectedResource?.tags or {})))[0...10]
 
     tagCategory : (word) =>
         getTagCategory(normalize(word))
