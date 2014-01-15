@@ -100,7 +100,6 @@ Meteor.methods(
             {matrix: matrixResults}
 
     'diagnoseSymptoms': (symptoms) ->
-        console.log symptoms
         svmDisease = svmFromSymptoms(symptoms)
         matrixResults = matrixFromSymptoms(symptoms)
         if svmDisease
