@@ -104,9 +104,13 @@ Template.tagList.helpers(
 )
 
 addTag = (tag, category) ->
+    unless tag in getHighlightedTags()
+        toggleTagHighlight(tag)
     @portfolioManager.services.tagService.addTag(tag, category)
 
 removeTag = (tag) ->
+    if tag in getHighlightedTags()
+        toggleTagHighlight(tag)
     @portfolioManager.services.tagService.removeTag(tag)
     
 toggleTagHighlight = (tag) ->
