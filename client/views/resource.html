@@ -15,14 +15,6 @@
             {{/if}}
         {{/each}}
     {{else}}
-        {{#with selectedPortfolio}}
-            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportPortfolio'}}">Export JSON portfolio metadata</a></h4>
-            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportGraph'}}">Export JSON graph</a></h4>
-            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportNodes'}}">Export JSON nodes</a></h4>
-        {{/with}}
-        or
-        <h4><-- Select a resource</h4>
-        <br />
         <h3>Portfolio Metadata</h3>
         <div>
             {{#with selectedPortfolio}}
@@ -35,6 +27,14 @@
         <br />
         {{#with selectedPortfolio}}
             {{> portfolioMetadata}}
+        {{/with}}
+
+        <br />
+        <br />
+        {{#with selectedPortfolio}}
+            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportPortfolio'}}">Export JSON portfolio metadata</a></h4>
+            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportGraph'}}">Export JSON graph</a></h4>
+            <h4><a class="btn btn-large btn-primary" target="_blank" href="{{pathFor 'exportNodes'}}">Export JSON nodes</a></h4>
         {{/with}}
     {{/if}}
 </template>
