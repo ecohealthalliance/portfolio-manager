@@ -135,6 +135,7 @@ Template.tagList.events(
         category = $('#add-tag-category').val()
         if normalize(tag).replace(/\s/g, '')
             addTag(tag, category)
+        $('#add-tag-text').val('')
 
     'click .suggested-tag' : (event) ->
         tag = $(event.currentTarget).text()
