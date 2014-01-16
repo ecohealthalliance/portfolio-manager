@@ -34,6 +34,24 @@ getSymptomsByReport = () ->
                 )
     symptomsByReport
 
+getSymptomsByPortfolio = () ->
+    symptomsByPortfolio = []
+    for portfolio in getPortfolios()
+        if portfolio.disease
+            portfolioSymptoms = []
+            for resourceId in portfolio.resources
+                resource = getResource(resourceId)
+                symptomTags = _.filter(_.keys(resource?.tags or {}), (tag) ->
+                    getTagCategory(tag) is 'symptom' and not resource.tags[tag].removed
+                )
+                portfolioSymptoms = _.union(portfolioSymptoms, symptomTags)
+
+            symptomsByPortfolio.push(
+                disease: portfolio.disease
+                symptoms: portfolioSymptoms
+            )
+    symptomsByPortfolio
+
 
 getSymptomsByDisease = () ->
     symptomsByDisease = {}
@@ -77,7 +95,7 @@ matrixFromText = (text) =>
 trainSVM = () =>
     try
         response = HTTP.post("http://localhost:5000/train", {data: {
-            training_data: getSymptomsByReport()
+            training_data: getSymptomsByPortfolio()
         }})
         true
     catch error
