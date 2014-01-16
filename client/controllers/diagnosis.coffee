@@ -21,8 +21,11 @@ Template.diagnosis.events(
             content = resource.content
         else
             portfolio = getPortfolio(Session.get('selectedPortfolio'))
-            content = (getResource(resourceId)?.content for resourceId in portfolio.resources)
-            content = content.join(' ')
+            if portfolio
+                content = (getResource(resourceId)?.content for resourceId in portfolio.resources)
+                content = content.join(' ')
+            else
+                content = $('#diagnosis-text').val()
 
         $('#diagnosis-results').html('Diagnosing...')
         Meteor.call('diagnose', content, (error, results) -> 
