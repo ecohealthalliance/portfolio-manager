@@ -3,10 +3,13 @@ import pymongo
 from bson.objectid import ObjectId
 import contextlib
 from urllib import urlopen
+import urllib2
 import json
 import re
 from datetime import datetime
 from import_promed import import_promed
+from translate import translateText
+
 
 
 report_id_regex = re.compile('\d{8}\.\d+')
@@ -33,18 +36,19 @@ if __name__ == '__main__':
 
     with open(args.file) as f:
         data = json.loads(f.read())
-        for location in data:
+        for location in data[0:20]:
             lat = location.get('lat')
             lon = location.get('lng')
             country = location.get('country')
 
-            for result in location.get('alerts'):
+            for result in location.get('alerts')[0:20]:
                 feed = result.get('feed')
                 disease = result.get('disease')
                 title = result.get('summary')
                 link = result.get('link')
                 descr = result.get('descr')
                 date = result.get('date')
+                feedLang = result.get('feed_lang')
 
                 if link:
                     with contextlib.closing(urlopen(link)) as linkResponse:
@@ -54,7 +58,7 @@ if __name__ == '__main__':
                             reportIdMatch = report_id_regex.search(html)
                             if reportIdMatch:
                                 reportId = reportIdMatch.group(0)
-                                import_promed(db, reportId)
+                                import_promed(db, reportId, feedLang)
                                 resourceId = resources.find_one({'promedId': reportId}).get('_id')
                             else:
                                 html = descr
@@ -71,6 +75,9 @@ if __name__ == '__main__':
                                 if 'Error 403' in content:
                                     content = descr
 
+                                if feedLang and feedLang != 'en':
+                                    content = translateText(content, feedLang, 'en')
+
                                 resourceId = resources.insert({
                                     '_id': str(ObjectId()),
                                     'title': title,
@@ -81,8 +88,8 @@ if __name__ == '__main__':
                                     'source': 'healthmap',
                                 })
                             imported_resources.append(resourceId)
-                        except Exception:
-                            print "error importing a resource"
+                        except Exception as e:
+                            print "error importing a resource: %s" % e
 
     portfolios.insert({
         '_id': str(ObjectId()),

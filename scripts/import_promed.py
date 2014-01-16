@@ -5,6 +5,7 @@ import contextlib
 import json
 import time
 from urllib import urlopen, unquote, urlencode
+from translate import translateText
 
 report_id_regex = re.compile('\d{8}\.\d+')
 label_regex = re.compile('>.*?Archive Number')
@@ -16,7 +17,7 @@ long_label_regex = re.compile('Subject\:.*?Archive Number')
 html_markup_regex = re.compile('<.*?>', flags=re.MULTILINE)
 extra_space_regex = re.compile('\s+', flags=re.MULTILINE)
 
-def import_promed(db, id):
+def import_promed(db, id, lang=None):
     url = "http://www.promedmail.org/getPost.php?alert_id=%s" % id
     with contextlib.closing(urlopen(url)) as raw_response:
         try:
@@ -33,13 +34,22 @@ def import_promed(db, id):
             except Exception as e:
                 print "Error decoding %s: %s" % (id, e)
 
-            match = label_regex.search(report)
+            if lang and lang != 'en':
+                try:
+                    translations = []
+                    for partial in post.split('. '):
+                        translations.append(translateText(partial, lang, 'en'))
+                    post = '. '.join(translations)
+                except Exception as e:
+                    print "Error translating %s: %s" % (id, e)
+
+            match = label_regex.search(post)
             if match:
                 label = match.group(0)[1:-14].strip()
             else:
                 label = id
 
-            linked_reports = [report_id for report_id in report_id_regex.findall(report)]
+            linked_reports = [report_id for report_id in report_id_regex.findall(post)]
 
             resources.update({'promedId': id}, {
                 'promedId': id,
@@ -87,6 +97,15 @@ def import_promed(db, id):
                     content = re.sub(extra_space_regex, ' ', content)
                     label = long_label_regex.search(content).group(0)[9:-15].strip()
                     linked_reports = [report_id for report_id in report_id_regex.findall(content)]
+
+                    if lang and lang != 'en':
+                        try:
+                            translations = []
+                            for partial in content.split('. '):
+                                translations.append(translateText(partial, lang, 'en'))
+                            content = '. '.join(translations)
+                        except Exception as e:
+                            print "Error translating %s: %s" % (id, e)
 
                     db.resources.update({'promedId': id}, {
                         '_id': str(ObjectId()),
