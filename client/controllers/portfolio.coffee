@@ -66,4 +66,8 @@ Template.resourcesList.events(
 Template.resourceListItem.helpers(
     selectedClass: () ->
         if @_id is Session.get('selectedResource') then " selected" else ""
+
+    linked: () ->
+        resource = getResource(Session.get('selectedResource'))
+        resource and @_id isnt resource._id and @promedId in resource?.linkedReports
 )
