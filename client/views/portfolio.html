@@ -11,9 +11,18 @@
     </div>
   </div>
   <div class="wrapper span3">
+    {{> vis}}
     {{> diagnosis}}
     <div id="selected-resource-tags">
       {{> tagList}}
     </div>
+  </div>
+</template>
+
+<template name="vis">
+  <div class="vis">
+    <a href="http://54.237.77.59:3000/grits-vis/graph/index.html?type=info&reports={{reportsList}}" target="_blank" class="btn btn-primary">Info Visualization</a>
+    <a href="http://54.237.77.59:3000/grits-vis/graph/index.html?type=geo&reports={{reportsList}}" target="_blank" class="btn btn-primary">Geo Visualization</a>
+    <a href="http://54.237.77.59:3000/grits-vis/graph/index.html?type=symptoms&reports={{reportsList}}" target="_blank" class="btn btn-primary">Symptom Visualization</a>
   </div>
 </template>

@@ -12,6 +12,9 @@ getTagColor = (tag) =>
 Template.diagnosisResults.helpers(
     color: () ->
         getTagColor(this)
+
+    symptomList: () ->
+        @allSymptoms.join(',')
 )
 
 Template.diagnosis.events(

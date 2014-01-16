@@ -7,10 +7,6 @@ clearSelections = () ->
     Session.set('selectedResource', null)
     Session.set('selectedPortfolio', null)
 
-drawGraph = () =>
-    url = "/server/graph/export"
-    kitware.draw(url, '#portfolio-graph')
-
 Router.map () ->
     @route('portfolioIcons', {
         path: '/portfolios/icons'
@@ -26,11 +22,6 @@ Router.map () ->
             Meteor.subscribe('portfolios')
     })
 
-    @route('portfolioGraph', {
-        path: '/portfolios/graph'
-        before: clearSelections
-        after: drawGraph
-    })
 
 Template.portfolioIcons.helpers(
     portfolios: () ->
