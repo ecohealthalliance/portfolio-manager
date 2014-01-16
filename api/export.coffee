@@ -60,7 +60,7 @@ createGraph = (resources, nodesOnly, diagnosis) ->
         for node1 in nodes
             for node2 in nodes
                 if node1 isnt node2
-                    infoLink = (if node2.promed_id in infoLinks[node1.promed_id] then true else false)
+                    infoLink = (if node2.promed_id in (infoLinks[node1.promed_id] or []) then true else false)
                     matchingSymptoms = _.intersection(node1.symptoms, node2.symptoms).length
                     if node1.lat and node1.lon and node2.lat and node2.lon
                         distance = greatCircleDistance(node1.lat, node1.lon, node2.lat, node2.lon)
