@@ -6,5 +6,5 @@ Router.map () ->
     @route('home', {
         path: '/'
         after: () ->
-            Router.go('portfolioIcons')
+            Router.go('splash')
     })
