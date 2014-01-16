@@ -1,4 +1,12 @@
 Router.map () ->
+    @route('train', {
+        path: '/train'
+        where: 'server'
+        action: () ->
+            result = Meteor.call('train')
+            @response.write(JSON.stringify(result))
+    })
+
     @route('diagnose', {
         path: '/diagnose'
         where: 'server'

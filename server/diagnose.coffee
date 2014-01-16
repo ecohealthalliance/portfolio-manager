@@ -74,10 +74,19 @@ matrixFromText = (text) =>
     matrixFromSymptoms(getSymptomsFromText(text))
 
 
+trainSVM = () =>
+    try
+        response = HTTP.post("http://localhost:5000/train", {data: {
+            training_data: getSymptomsByReport()
+        }})
+        true
+    catch error
+        console.log "SVM diagnosis server unavailable"
+        null
+
 svmFromSymptoms = (symptoms) =>
     try
         response = HTTP.post("http://localhost:5000/diagnose", {data: {
-            training_data: getSymptomsByReport()
             test_data: symptoms
         }})
         response.content
@@ -91,6 +100,9 @@ svmFromText = (text) =>
 
 
 Meteor.methods(
+    'train' : () ->
+        trainSVM()
+
     'diagnose' : (text) ->
         svmDisease = svmFromText(text)
         matrixResults = matrixFromText(text)
