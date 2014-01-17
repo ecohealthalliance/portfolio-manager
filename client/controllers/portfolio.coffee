@@ -69,5 +69,5 @@ Template.resourceListItem.helpers(
 
     linked: () ->
         resource = getResource(Session.get('selectedResource'))
-        resource and @_id isnt resource._id and @promedId in resource?.linkedReports
+        resource and @_id isnt resource._id and @promedId in (resource?.linkedReports or [])
 )
