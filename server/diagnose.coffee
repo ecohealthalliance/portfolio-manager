@@ -92,10 +92,10 @@ matrixFromText = (text) =>
     matrixFromSymptoms(getSymptomsFromText(text))
 
 
-trainSVM = () =>
+trainSVM = (trainingData) =>
     try
         response = HTTP.post("http://localhost:5000/train", {data: {
-            training_data: getSymptomsByPortfolio()
+            training_data: trainingData
         }})
         true
     catch error
@@ -119,7 +119,10 @@ svmFromText = (text) =>
 
 Meteor.methods(
     'train' : () ->
-        trainSVM()
+        trainSVM(getSymptomsByPortfolio())
+
+    'trainOnReports' : () ->
+        trainSVM(getSymptomsByReport())
 
     'diagnose' : (text) ->
         svmDisease = svmFromText(text)
