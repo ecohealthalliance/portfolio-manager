@@ -2,6 +2,10 @@ var getSessionSortKey = function (identifier) {
     return identifier + '-reactive-table-sort';
 };
 
+var getSessionSortDirectionKey = function (identifier) {
+    return identifier + '-reactive-table-sort-direction';
+};
+
 var getSessionRowsPerPageKey = function (identifier) {
     return identifier + '-reactive-table-rows-per-page';
 };
@@ -26,6 +30,7 @@ if (Handlebars) {
         }
         var identifier = collection._name + _.uniqueId();
         Session.setDefault(getSessionSortKey(identifier), fields[0].key || fields[0]);
+        Session.setDefault(getSessionSortDirectionKey(identifier), 1);
         Session.setDefault(getSessionRowsPerPageKey(identifier), 10);
         Session.setDefault(getSessionCurrentPageKey(identifier), 0);
         var html = Template.reactiveTable({
@@ -77,10 +82,16 @@ Template.reactiveTable.helpers({
         return !this.fn;
     },
 
+    "isAscending" : function (identifier) {
+        var sortDirection = Session.get(getSessionSortDirectionKey(identifier));
+        return (sortDirection === 1);
+    },
+
     "sortedRows": function () {
         var sortKey = Session.get(getSessionSortKey(this.identifier));
+        var sortDirection = Session.get(getSessionSortDirectionKey(this.identifier));
         var sortQuery = {};
-        sortQuery[sortKey] = 1;
+        sortQuery[sortKey] = sortDirection;
         var limit = Session.get(getSessionRowsPerPageKey(this.identifier));
         var currentPage = Session.get(getSessionCurrentPageKey(this.identifier));
         var skip = currentPage * limit;
@@ -121,7 +132,13 @@ Template.reactiveTable.events({
     "click .reactive-table .sortable": function (event) {
         var sortKey = $(event.target).attr("key");
         var identifier = $(event.target).parents('.reactive-table').attr('reactive-table-id');
-        Session.set(getSessionSortKey(identifier), sortKey);
+        var currentSortKey = Session.get(getSessionSortKey(identifier));
+        if (currentSortKey === sortKey) {
+            var sortDirection = -1 * Session.get(getSessionSortDirectionKey(identifier));
+            Session.set(getSessionSortDirectionKey(identifier), sortDirection);
+        } else {
+            Session.set(getSessionSortKey(identifier), sortKey);
+        }
     },
 
     "change .reactive-table-navigation .rows-per-page input": function (event) {

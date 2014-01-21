@@ -4,7 +4,13 @@
             <tr>
             {{#each fields}}
                 {{#if isSortKey this ../identifier}}
-                    <th class="{{getKey}} sort-selected" key="{{getKey}}">{{getLabel}}&nbsp;&nbsp;&#x25BC;</th>
+                    <th class="{{getKey}} sortable" key="{{getKey}}">{{getLabel}}&nbsp;&nbsp;
+                        {{#if isAscending ../../identifier}}
+                          &#x25BC;
+                        {{else}}
+                          &#x25B2;
+                        {{/if}}
+                    </th>
                 {{else}}
                     {{#if isSortable}}
                         <th class="{{getKey}} sortable" key="{{getKey}}">{{getLabel}}</th>
