@@ -3,10 +3,7 @@
   "dependencies": {
     "basePackages": {
       "iron-router": {},
-      "reactive-table": {
-        "git": "https://github.com/ecohealthalliance/reactive-table",
-        "branch": "master"
-      }
+      "reactive-table": {}
     },
     "packages": {
       "iron-router": {
@@ -15,9 +12,9 @@
         "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
       },
       "reactive-table": {
-        "git": "https://github.com/ecohealthalliance/reactive-table",
-        "branch": "master",
-        "commit": "bffec9ab046dcf5b672db21f97e18c58668d956f"
+        "git": "https://github.com/ecohealthalliance/reactive-table.git",
+        "tag": "v0.1.2",
+        "commit": "59129e7c4fbf0610700d7746afe829e53c4f7895"
       }
     }
   }

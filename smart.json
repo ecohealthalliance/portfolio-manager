@@ -1,8 +1,6 @@
 {
   "packages": {
     "iron-router": {},
-    "reactive-table": {
-    	"git": "https://github.com/ecohealthalliance/reactive-table"
-    }
+    "reactive-table": {}
   }
 }
