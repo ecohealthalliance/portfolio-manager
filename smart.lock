@@ -8,18 +8,18 @@
     "packages": {
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.2",
-        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
+        "tag": "v0.6.4",
+        "commit": "927bbaed1b87894fb6fb70807f74ff3a5bd89f29"
       },
       "reactive-table": {
         "git": "https://github.com/ecohealthalliance/reactive-table.git",
-        "tag": "v0.1.4",
-        "commit": "389757b620cfb97060d5781c8efae83a7b1ec071"
+        "tag": "v0.1.11",
+        "commit": "7b137c874da0d22d623edcf359f811f2c3750ef3"
       },
       "just-i18n": {
         "git": "https://github.com/subhog/meteor-just-i18n.git",
-        "tag": "v0.1.1",
-        "commit": "ce88ac66c0dc107dc2da93ce152616115838101f"
+        "tag": "v0.2.1",
+        "commit": "30746ec790ca0962fe232fa7c3e56f8585ba88fd"
       }
     }
   }
