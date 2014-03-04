@@ -2,6 +2,9 @@ getResource = (resourceId) =>
     Resources = @portfolioManager.collections.Resources
     Resources.findOne({_id: resourceId})
 
+getTagColor = (tag) =>
+    @portfolioManager.services.tagColor(tag)
+
 Template.portfolioTags.helpers(
     tags: () ->
         tags = []
@@ -13,4 +16,7 @@ Template.portfolioTags.helpers(
                 )
                 tags = _.union(tags, resourceTags)
         tags
+
+    color: () ->
+        getTagColor(this)
 )
