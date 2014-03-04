@@ -53,13 +53,12 @@ Template.portfolioTable.helpers(
                     fn: (value) -> value.length
                 }
             ],
-            attrs: { portfolio: '_id' },
             group: 'portfolios'
         }
 )
 
 Template.portfolioTable.events(
     'click #portfolio-table tbody tr': (event) ->
-        portfolioId = $(event.currentTarget).attr('portfolio')
+        portfolioId = this._id;
         Router.go('portfolio', {_id: portfolioId})
 )
