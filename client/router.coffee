@@ -11,13 +11,18 @@ Router.map () ->
     @route('annotatableResource', {
         path: '/annotatableResources/:_id',
         after: () ->
-            _.defer ()-> $('.annotation-panel').annotator().annotator('setupPlugins', null, {
-                Auth: {
-                  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZWRBdCI6IjIwMTQtMDMtMjZUMTE6MDQ6MzRaIiwiY29uc3VtZXJLZXkiOiJhYWUzYzczNzg1MmQ0Y2MxYjE1MDE3MzJhY2E4ZmFiNCIsInVzZXJJZCI6Ik5BIiwidHRsIjo4NjQwMH0.DntD2DNamuR3ka4IV_QK7swJJsnvtlP59WcO89qExqc'
-                },
-                Permissions: false,
-                AnnotateItPermissions: {}
-            });
+            _.defer ()->
+                $('.annotation-panel').annotator()
+                .annotator('addPlugin', 'Unsupported')
+                .annotator('addPlugin', 'Filter')
+                .annotator('addPlugin', 'Store', {
+                    #The endpoint of the store on your server.
+                    prefix: '/annotator',
+                    annotationData: {
+                        'uri': window.location.href,
+                        'test': true
+                    }
+                })
         
         data: () ->
             Resources = portfolioManager.collections.Resources
