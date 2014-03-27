@@ -1,5 +1,8 @@
 <template name="resource">
     {{#if isResourceSelected}}
+        <a href="/annotatableResources/{{resourceId}}" class="btn btn-primary btn-block">
+            Annotate Resource
+        </a>
         {{#each selectedResourceWords}}
             {{#if highlighted this}}
                 <div class="tag-container">

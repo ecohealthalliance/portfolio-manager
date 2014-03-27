@@ -37,6 +37,9 @@ Template.resource.helpers(
     isResourceSelected: () ->
         Session.get('selectedResource')
 
+    resourceId: () ->
+        Session.get('selectedResource')
+
     highlighted: (tag) ->
         tag.category and normalize(tag.word) in getHighlightedTags()
 

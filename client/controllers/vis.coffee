@@ -20,5 +20,4 @@ Template.vis.helpers(
 			resources = getResources({'_id': {'$in': selectedPortfolio.resources}})
 			promedIds = (resource.promedId for resource in resources)
 			promedIds.join(',')
-
 )
