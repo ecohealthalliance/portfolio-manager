@@ -17,7 +17,8 @@ Template.vis.helpers(
 			selectedResource.promedId
 		else
 			selectedPortfolio = getPortfolio(Session.get('selectedPortfolio'))
-			resources = getResources({'_id': {'$in': selectedPortfolio.resources}})
-			promedIds = (resource.promedId for resource in resources)
-			promedIds.join(',')
+			if selectedPortfolio
+    			resources = getResources({'_id': {'$in': selectedPortfolio.resources}})
+    			promedIds = (resource.promedId for resource in resources)
+    			promedIds.join(',')
 )
