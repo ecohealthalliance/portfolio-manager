@@ -8,8 +8,16 @@ body
 .navbar .navbar-inner
   border-radius 0px 0px 3px 3px
 
+/*
+This style causes the annotaiton pop-up to be clipped.
+If the side-panels need to stay in the view port
+I suggest we use the bootstrap affix plug-in,
+or add a position:fixed rule to them.
 .wrapper, #resources-list-wrapper
   overflow auto
+*/
+.wrapper
+  overflow-wrap break-word
 
 .resource-list-item
   margin-right 20px

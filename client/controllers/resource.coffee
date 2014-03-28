@@ -34,10 +34,11 @@ Template.resource.helpers(
     selectedPortfolio: () ->
         getPortfolio(Session.get('selectedPortfolio'))
 
-    isResourceSelected: () ->
-        Session.get('selectedResource')
+    #Removing in favor of selectedResourceId
+    #isResourceSelected: () ->
+    #    Session.get('selectedResource')
 
-    resourceId: () ->
+    selectedResourceId: () ->
         Session.get('selectedResource')
 
     highlighted: (tag) ->
@@ -60,6 +61,36 @@ Template.resource.helpers(
             else
                 groupedWords.push(words[i])
         ({word: word, category: getTagCategory(word)} for word in groupedWords)
+
+    annotatedSelectedResource: ()->
+        #I'm not sure if this is the most meteorish way to add the annotator.
+        #I tried using the template's render event, but the problem is that
+        #it only gets called when the view is first created, so
+        #it doesn't update when the resource changes.
+        _.defer ()->
+            if window.annotator?
+                window.annotator.destroy()
+            window.annotator = new Annotator('#selected-resource')
+            window.annotator.addPlugin('Unsupported')
+            window.annotator.addPlugin('Filter')
+            window.annotator.addPlugin('Store', {
+                #The endpoint of the store on your server.
+                prefix: '/annotator'
+                annotationData: {
+                    uri: window.location.href,
+                    templateId: Session.get('selectedResource')
+                    test: true
+                }
+                loadFromSearch: {
+                    'uri': window.location.href
+                }
+            })
+            #window.annotator.addPlugin('Categories', {
+                #cata : 'cata'
+                #catb : 'catb'
+            #})
+        resourceId = Session.get('selectedResource')
+        getResource(resourceId)
 
     color: () ->
         getTagColor(normalize(@word))
@@ -85,3 +116,6 @@ Template.resource.events(
         event.preventDefault()
         false
 )
+
+Template.resource.destroyed = () ->
+    window.annotator.destroy()

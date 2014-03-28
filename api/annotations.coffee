@@ -2,7 +2,7 @@
 # http://docs.annotatorjs.org/en/latest/storage.html#core-storage-api
 
 # TODOS:
-# The search API is not implemented (so all the annotations are read on every page load).
+# The search API is not fully implemented.
 # I have not implemented the auth API.
 # The "see other" repsonses might require work arounds for older browsers.
 
@@ -90,20 +90,20 @@ Router.map () ->
                     
     })
     
-##    @route('annotator/search', {
-##        path: 'annotator/search'
-##        where: 'server'
-##        action: () ->
-##            Annotations = portfolioManager.collections.Annotations;
-##            #Return all the annotations
-##            @response.setHeader('Content-Type', 'application/json')
-##            rows = Annotations.find().map((v)->
-##                v.id = v._id
-##                return v
-##            )
-##            @response.write(JSON.stringify({
-##                total : rows.length,
-##                rows : rows
-##            }))
-##                    
-##    })
+    @route('annotator/search', {
+        path: 'annotator/search'
+        where: 'server'
+        action: () ->
+            Annotations = portfolioManager.collections.Annotations;
+            #Return all the annotations
+            @response.setHeader('Content-Type', 'application/json')
+            rows = Annotations.find(@request.query).map((v)->
+                v.id = v._id
+                return v
+            )
+            @response.write(JSON.stringify({
+                total : rows.length,
+                rows : rows
+            }))
+                    
+    })
