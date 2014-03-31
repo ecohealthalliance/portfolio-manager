@@ -34,10 +34,6 @@ Template.resource.helpers(
     selectedPortfolio: () ->
         getPortfolio(Session.get('selectedPortfolio'))
 
-    #Removing in favor of selectedResourceId
-    #isResourceSelected: () ->
-    #    Session.get('selectedResource')
-
     selectedResourceId: () ->
         Session.get('selectedResource')
 
