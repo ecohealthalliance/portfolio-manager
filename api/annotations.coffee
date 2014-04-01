@@ -7,27 +7,16 @@
 # The "see other" repsonses might require work arounds for older browsers.
 
 # Notes:
-# I have some doubts that Meteor is a good platform for building APIs,
-# many of the features I'm using are undocumented and come from the underlying
-# node.js code.
-# There is a sample implementation of the API written in Python that uses
-# an elastic search backend that would be worth considering using instead.
+# Many of the features I'm using are not mentioned in the meteor documentaiton
+# and come from the underlying node.js code.
+# There are a number of other backend implementations for the annotation plug-in
+# mentioned in its github wiki.
+# They might be able to replace this one in a future release.
 
 Router.map () ->
     @route('annotator', {
         where: 'server'
         action: () ->
-            ##Debug code for printing circular requests objects
-            ##cache = []
-            ##@response.write(JSON.stringify(@request, (key, value) ->
-            ##    if (typeof value == 'object' && value != null)
-            ##        if (cache.indexOf(value) != -1)
-            ##            #Circular reference found, discard key
-            ##            return
-            ##        #Store value in our collection
-            ##        cache.push(value)
-            ##    return value
-            ##, 2))
             @response.setHeader('Content-Type', 'application/json')
             @response.write(JSON.stringify({
                 name : "Annotator Store API (Meteor)",
@@ -39,6 +28,7 @@ Router.map () ->
         where: 'server'
         action: () ->
             Annotations = portfolioManager.collections.Annotations;
+            AnnotationsLog = portfolioManager.collections.AnnotationsLog;
             switch @request.method
                 when "GET"
                     #Return all the annotations
@@ -49,12 +39,16 @@ Router.map () ->
                     )
                     @response.write(JSON.stringify(rows))
                 when "POST"
-                    console.log(@request.body)
+                    id = Annotations.insert(@request.body)
+                    AnnotationsLog.insert
+                        type : 'create'
+                        data : @request.body
+                        id : id
+                    
                     #Add the annotation to the database
                     @response.writeHead(303, "SEE OTHER", {
                         Location : Meteor.absoluteUrl(
-                            "annotator/annotations/" +
-                            Annotations.insert(@request.body)
+                            "annotator/annotations/" + id
                         )
                     })
     })
@@ -64,6 +58,7 @@ Router.map () ->
         where: 'server'
         action: () ->
             Annotations = portfolioManager.collections.Annotations;
+            AnnotationsLog = portfolioManager.collections.AnnotationsLog;
             switch @request.method
                 when "GET"
                     #Get an individual annotation
@@ -74,6 +69,11 @@ Router.map () ->
                     annotationObj.id = @params.id;
                     @response.write(JSON.stringify(annotationObj))
                 when "PUT"
+                    AnnotationsLog.insert
+                        type : 'update'
+                        data : @request.body
+                        id : @params.id
+                    
                     Annotations.upsert({
                         _id : @params.id
                     }, @request.body)
@@ -84,11 +84,14 @@ Router.map () ->
                         )
                     })
                 when "DELETE"
+                    AnnotationsLog.insert
+                        type : 'remove'
+                        id : @params.id
+                    
                     Annotations.remove({
                         _id : @params.id
                     })
                     @response.writeHead(204, "NO CONTENT", {})
-                    
     })
     
     @route('annotator/search', {
@@ -108,55 +111,3 @@ Router.map () ->
             }))
                     
     })
-    
-    #This route serves static pages with
-    #the resource text and annotator plug-in.
-    @route 'annotatableResources',
-        path: 'annotatableResources/:_id'
-        where: 'server'
-        action: () ->
-            resource = portfolioManager.collections.Resources.findOne(_id: @params._id)
-            if resource?
-                @response.write(resourceTemplate(resource))
-            else
-                console.log "Couldn't load : #{@params._id}"
-                @response.writeHead(404, "NOT FOUND")
-
-resourceTemplate = (resource) ->
-    """
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link href="/annotator-full/annotator.min.css" rel="stylesheet" type="text/css" />
-    <script src="/annotator-full/annotator-full.min.js"></script>
-    <script>
-    $(function(){
-        var annotator = new Annotator($('body')[0]);
-        annotator.addPlugin('Unsupported');
-        annotator.addPlugin('Filter');
-        annotator.addPlugin('Store', {
-            prefix: '/annotator',
-            annotationData: {
-                uri: window.location.href,
-                resourceId: "#{resource._id}",
-                test: true
-            },
-            loadFromSearch: {
-                'uri': window.location.href
-            }
-        });
-        /*
-        annotator.addPlugin('Categories', {
-            cata : 'cata'
-            catb : 'catb'
-        });
-        */
-    });
-    </script>
-      <meta charset="utf-8">
-      <title>JS Bin</title>
-    </head>
-    <body>#{resource.content}</body>
-    </html>
-    """
