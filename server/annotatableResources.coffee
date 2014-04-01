@@ -3,9 +3,9 @@ resourceTemplate = (resource) ->
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link href="/annotator-full/annotator.min.css" rel="stylesheet" type="text/css" />
-    <script src="/annotator-full/annotator-full.min.js"></script>
+    <script src="/3p/jquery.min.js"></script>
+    <link href="/3p/annotator-full/annotator.min.css" rel="stylesheet" type="text/css" />
+    <script src="/3p/annotator-full/annotator-full.min.js"></script>
     <script>
     $(function(){
         var annotator = new Annotator($('body')[0]);
