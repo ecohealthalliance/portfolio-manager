@@ -13,6 +13,9 @@
 # mentioned in its github wiki.
 # They might be able to replace this one in a future release.
 
+getCurrentUser = () =>
+    @portfolioManager.currentUser
+
 Router.map () ->
     @route('annotator', {
         where: 'server'
@@ -42,6 +45,8 @@ Router.map () ->
                     id = Annotations.insert(@request.body)
                     AnnotationsLog.insert
                         type : 'create'
+                        userId: getCurrentUser()
+                        date: new Date()
                         data : @request.body
                         id : id
                     
@@ -71,6 +76,8 @@ Router.map () ->
                 when "PUT"
                     AnnotationsLog.insert
                         type : 'update'
+                        userId: getCurrentUser()
+                        date: new Date()
                         data : @request.body
                         id : @params.id
                     
@@ -85,6 +92,8 @@ Router.map () ->
                     })
                 when "DELETE"
                     AnnotationsLog.insert
+                        userId: getCurrentUser()
+                        date: new Date()
                         type : 'remove'
                         id : @params.id
                     

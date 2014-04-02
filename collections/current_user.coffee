@@ -1,0 +1,2 @@
+@portfolioManager ?= {}
+@portfolioManager.currentUser = null
