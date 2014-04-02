@@ -8,7 +8,7 @@ resourceTemplate = (resource) ->
     <script src="/3p/annotator-full/annotator-full.min.js"></script>
     <script>
     $(function(){
-        var annotator = new Annotator($('body')[0]);
+        var annotator = new Annotator($('.resource')[0]);
         annotator.addPlugin('Unsupported');
         annotator.addPlugin('Filter');
         annotator.addPlugin('Store', {
@@ -30,10 +30,16 @@ resourceTemplate = (resource) ->
         */
     });
     </script>
+    <style>
+    .resource {
+        max-width: 500px;
+        margin: auto;
+    }
+    </style>
       <meta charset="utf-8">
       <title>Annotator</title>
     </head>
-    <body>#{resource.content}</body>
+    <body class="resource">#{resource.content}</body>
     </html>
     """
 
