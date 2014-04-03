@@ -1,10 +1,8 @@
-Router.configure(
+Router.configure
     layoutTemplate: 'layout'
-)
 
 Router.map () ->
-    @route('home', {
+    @route 'home',
         path: '/'
         after: () ->
             Router.go('splash')
-    })

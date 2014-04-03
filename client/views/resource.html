@@ -1,19 +1,6 @@
 <template name="resource">
-    {{#if isResourceSelected}}
-        {{#each selectedResourceWords}}
-            {{#if highlighted this}}
-                <div class="tag-container">
-                  <div class="tag-category">
-                    <span class="label">{{category}}&nbsp;&nbsp;
-                        <span class="remove-tag">&times;</span>
-                    </span>
-                  </div>
-                  <span class="tag label" style="background-color:{{color}}">{{word}}</span>
-                </div>
-            {{else}}
-                {{word}}
-            {{/if}}
-        {{/each}}
+    {{#if selectedResourceId}}
+        <iframe seamless src="/annotatableResources/{{selectedResourceId}}">
     {{else}}
         <h3>Portfolio Metadata</h3>
         <div>

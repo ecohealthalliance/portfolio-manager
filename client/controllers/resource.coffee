@@ -34,7 +34,7 @@ Template.resource.helpers(
     selectedPortfolio: () ->
         getPortfolio(Session.get('selectedPortfolio'))
 
-    isResourceSelected: () ->
+    selectedResourceId: () ->
         Session.get('selectedResource')
 
     highlighted: (tag) ->

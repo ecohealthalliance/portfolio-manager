@@ -27,7 +27,7 @@ Router.map () ->
             )
             Session.set('highlightedTags', resourceTags)
         waitOn: () ->
-            subscriptions = [Meteor.subscribe('resources')]
+            subscriptions = [Meteor.subscribe('resources'), Meteor.subscribe('portfolios')]
             if @params.resourceId
                 resource = getResource(@params.resourceId)
                 subscriptions.push Meteor.subscribe('reportTags', resource?.content or '')
@@ -51,9 +51,10 @@ Template.resourcesList.helpers(
         portfolioId = Session.get('selectedPortfolio')
         if portfolioId
             portfolio = getPortfolio(portfolioId)
-            resourceIds = portfolio.resources
-            query = {_id: {'$in': resourceIds}}
-            getResources(query)
+            if portfolio
+                resourceIds = portfolio.resources
+                query = {_id: {'$in': resourceIds}}
+                getResources(query)
 )
 
 Template.resourcesList.events(
