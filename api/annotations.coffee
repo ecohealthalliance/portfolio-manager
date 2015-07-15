@@ -13,6 +13,9 @@
 # mentioned in its github wiki.
 # They might be able to replace this one in a future release.
 
+getCurrentUser = () =>
+    @portfolioManager.currentUser
+
 Router.map () ->
     @route('annotator', {
         where: 'server'
@@ -39,18 +42,23 @@ Router.map () ->
                     )
                     @response.write(JSON.stringify(rows))
                 when "POST"
-                    id = Annotations.insert(@request.body)
-                    AnnotationsLog.insert
-                        type : 'create'
-                        data : @request.body
-                        id : id
-                    
-                    #Add the annotation to the database
-                    @response.writeHead(303, "SEE OTHER", {
-                        Location : Meteor.absoluteUrl(
-                            "annotator/annotations/" + id
-                        )
-                    })
+                    if getCurrentUser()
+                        id = Annotations.insert(@request.body)
+                        AnnotationsLog.insert
+                            type : 'create'
+                            userId: getCurrentUser()
+                            date: new Date()
+                            data : @request.body
+                            id : id
+                        
+                        #Add the annotation to the database
+                        @response.writeHead(303, "SEE OTHER", {
+                            Location : Meteor.absoluteUrl(
+                                "annotator/annotations/" + id
+                            )
+                        })
+                    else
+                        @response.writeHead(401, "UNAUTHORIZED")
     })
     
     @route('annotator/annotations/', {
@@ -69,29 +77,39 @@ Router.map () ->
                     annotationObj.id = @params.id;
                     @response.write(JSON.stringify(annotationObj))
                 when "PUT"
-                    AnnotationsLog.insert
-                        type : 'update'
-                        data : @request.body
-                        id : @params.id
-                    
-                    Annotations.upsert({
-                        _id : @params.id
-                    }, @request.body)
-                    @response.writeHead(303, "SEE OTHER", {
-                        Location : Meteor.absoluteUrl(
-                            "annotator/annotations/" +
-                            @params.id
-                        )
-                    })
+                    if getCurrentUser()
+                        AnnotationsLog.insert
+                            type : 'update'
+                            userId: getCurrentUser()
+                            date: new Date()
+                            data : @request.body
+                            id : @params.id
+                        
+                        Annotations.upsert({
+                            _id : @params.id
+                        }, @request.body)
+                        @response.writeHead(303, "SEE OTHER", {
+                            Location : Meteor.absoluteUrl(
+                                "annotator/annotations/" +
+                                @params.id
+                            )
+                        })
+                    else
+                        @response.writeHead(401, "UNAUTHORIZED")
                 when "DELETE"
-                    AnnotationsLog.insert
-                        type : 'remove'
-                        id : @params.id
-                    
-                    Annotations.remove({
-                        _id : @params.id
-                    })
-                    @response.writeHead(204, "NO CONTENT", {})
+                    if getCurrentUser()
+                        AnnotationsLog.insert
+                            userId: getCurrentUser()
+                            date: new Date()
+                            type : 'remove'
+                            id : @params.id
+                        
+                        Annotations.remove({
+                            _id : @params.id
+                        })
+                        @response.writeHead(204, "NO CONTENT", {})
+                    else
+                        @response.writeHead(401, "UNAUTHORIZED")
     })
     
     @route('annotator/search', {
